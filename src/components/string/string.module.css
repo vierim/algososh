@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 522px;
+  margin: 0 auto;
+}
+
+.blockh {
+  height: 60px;
+}

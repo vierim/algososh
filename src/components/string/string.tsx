@@ -17,6 +17,7 @@ export const StringComponent: React.FC = () => {
   const [value, setValue] = useState('');
   const [result, setResult] = useState<TReverseStringResult>([]);
   const [step, setStep] = useState<number>(-1);
+  const [runnig, setRunning] = useState<boolean>(false);
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setValue(evt.target.value);
@@ -37,16 +38,21 @@ export const StringComponent: React.FC = () => {
       })
     );
 
+    setRunning(true);
     setStep(0);
   };
 
   const reverseElements = () => {
-    if (step < 0 || step >= Math.floor(result.length / 2)) {
+    if (step < 0) {
+      return;
+    }
+
+    if (step >= Math.floor(result.length / 2)) {
+      setRunning(false);
       return;
     }
 
     let iteration = swapElements(result, step);
-
     setResult(iteration);
     setStep((prevStep) => prevStep + 1);
   };
@@ -67,7 +73,11 @@ export const StringComponent: React.FC = () => {
           value={value}
           onChange={handleChange}
         />
-        <Button text={'Развернуть'} onClick={handleClick} />
+        <Button 
+          text={'Развернуть'} 
+          onClick={handleClick} 
+          isLoader={runnig} 
+        />
       </div>
 
       <div className={styles.results}>

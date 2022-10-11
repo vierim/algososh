@@ -9,3 +9,9 @@
 .blockh {
   height: 60px;
 }
+
+.results {
+  display: inline-flex;
+  gap: 16px;
+  margin: 120px auto 0;
+}

@@ -24,8 +24,15 @@ export const StringComponent: React.FC = () => {
   };
 
   const handleClick = () => {
+    let chars = value.split('');
+
+    if (chars.length === 1) {
+      setResult([{ char: chars[0], state: ElementStates.Modified }]);
+      return;
+    }
+
     setResult(
-      value.split('').map((item, index) => {
+      chars.map((item, index) => {
         let elementState =
           index === 0 || index === value.length - 1
             ? ElementStates.Changing
@@ -73,11 +80,7 @@ export const StringComponent: React.FC = () => {
           value={value}
           onChange={handleChange}
         />
-        <Button 
-          text={'Развернуть'} 
-          onClick={handleClick} 
-          isLoader={runnig} 
-        />
+        <Button text={'Развернуть'} onClick={handleClick} isLoader={runnig} />
       </div>
 
       <div className={styles.results}>

@@ -4,6 +4,11 @@ import { TReverseStringResult } from "../../types/results";
 export const swapElements = (array: TReverseStringResult, step: number) => {
   let res = [...array];
 
+  if(res.length === 1) {
+    res[0].state = ElementStates.Modified;
+    return res;
+  }
+
   let tmp = res[step];
   res[step] = res[res.length - step - 1];
   res[res.length - step -1] = tmp;

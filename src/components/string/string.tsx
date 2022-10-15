@@ -4,7 +4,7 @@ import { DELAY_IN_MS } from '../../constants/delays';
 import { swapElements } from './utils';
 
 import { ElementStates } from '../../types/element-states';
-import { TReverseStringResult } from '../../types/results';
+import type { TReverseStringResult } from '../../types/results';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -23,30 +23,35 @@ export const StringComponent: React.FC = () => {
     setValue(evt.target.value);
   };
 
-  const handleClick = () => {
-    let chars = value.split('');
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
 
-    if (chars.length === 1) {
-      setResult([{ char: chars[0], state: ElementStates.Modified }]);
-      return;
+    if (value.length > 0) {
+      setResult([]);
+      let chars = value.split('');
+
+      if (chars.length === 1) {
+        setResult([{ char: chars[0], state: ElementStates.Modified }]);
+        return;
+      }
+
+      setResult(
+        chars.map((item, index) => {
+          let elementState =
+            index === 0 || index === value.length - 1
+              ? ElementStates.Changing
+              : ElementStates.Default;
+
+          return {
+            char: item,
+            state: elementState,
+          };
+        })
+      );
+
+      setRunning(true);
+      setStep(0);
     }
-
-    setResult(
-      chars.map((item, index) => {
-        let elementState =
-          index === 0 || index === value.length - 1
-            ? ElementStates.Changing
-            : ElementStates.Default;
-
-        return {
-          char: item,
-          state: elementState,
-        };
-      })
-    );
-
-    setRunning(true);
-    setStep(0);
   };
 
   const reverseElements = () => {
@@ -71,24 +76,32 @@ export const StringComponent: React.FC = () => {
 
   return (
     <SolutionLayout title="Строка">
-      <div className={styles.container}>
+      <form className={styles.form}>
         <Input
           type={'text'}
-          style={{ height: '60px' }}
           maxLength={11}
           isLimitText={true}
           value={value}
           onChange={handleChange}
         />
-        <Button text={'Развернуть'} onClick={handleClick} isLoader={runnig} />
-      </div>
+        <Button
+          type={'submit'}
+          text={'Развернуть'}
+          onClick={handleClick}
+          isLoader={runnig}
+        />
+      </form>
 
-      <div className={styles.results}>
+      <ul className={styles.results}>
         {result.length > 0 &&
-          result.map((item) => {
-            return <Circle state={item.state} letter={item.char} />;
+          result.map((item, index) => {
+            return (
+              <li key={index}>
+                <Circle state={item.state} letter={item.char} />
+              </li>
+            );
           })}
-      </div>
+      </ul>
     </SolutionLayout>
   );
 };

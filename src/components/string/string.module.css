@@ -1,4 +1,4 @@
-.container {
+.form {
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -6,12 +6,10 @@
   margin: 0 auto;
 }
 
-.blockh {
-  height: 60px;
-}
-
 .results {
   display: inline-flex;
   gap: 16px;
   margin: 120px auto 0;
+  padding: 0;
+  list-style: none;
 }

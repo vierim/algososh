@@ -20,10 +20,8 @@ export const FibonacciPage: React.FC = () => {
     const val = Number(evt.target.value);
     setValue(val);
 
-    if (val >= 0) {
-      if (error) {
-        setError(false);
-      }
+    if (error && val >= 0) {
+      setError(false);
     }
   };
 
@@ -34,11 +32,7 @@ export const FibonacciPage: React.FC = () => {
     if (value < 0) {
       setError(true);
       return;
-    } else {
-      if (error) {
-        setError(false);
-      }
-    }
+    } 
 
     const fib = (n: number): number[] => {
       let arr: number[] = [0, 1];
@@ -49,7 +43,6 @@ export const FibonacciPage: React.FC = () => {
     };
 
     setSolution(fib(Number(value) + 1));
-    setResult([]);
     setRunning(true);
     setStep(0);
   };

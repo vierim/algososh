@@ -60,26 +60,26 @@ export const SortingPage: React.FC = () => {
     setStep(0);
   };
 
-  const getNextStep = () => {
-    if (step < 0) {
-      return;
-    }
-
-    if (step >= solution.length) {
-      setRunning(false);
-      return;
-    }
-
-    setResult(
-      solution[step].map((item) => {
-        return { ...item };
-      })
-    );
-    setStep((prevStep) => prevStep + 1);
-  };
-
   useEffect(() => {
-    window.setTimeout(() => getNextStep(), SHORT_DELAY_IN_MS);
+    const takeNextStep = () => {
+      if (step < 0) {
+        return;
+      }
+  
+      if (step >= solution.length) {
+        setRunning(false);
+        return;
+      }
+  
+      setResult(
+        solution[step].map((item) => {
+          return { ...item };
+        })
+      );
+      setStep((prevStep) => prevStep + 1);
+    };
+
+    window.setTimeout(() => takeNextStep(), SHORT_DELAY_IN_MS);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);

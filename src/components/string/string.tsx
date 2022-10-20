@@ -4,7 +4,7 @@ import { DELAY_IN_MS } from '../../constants/delays';
 import { swapElements } from './utils';
 
 import { ElementStates } from '../../types/element-states';
-import type { TReverseStringResult } from '../../types/results';
+import type { TReverseStringResult } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -31,7 +31,7 @@ export const StringComponent: React.FC = () => {
       let chars = value.split('');
 
       if (chars.length === 1) {
-        setResult([{ char: chars[0], state: ElementStates.Modified }]);
+        setResult([{ value: chars[0], state: ElementStates.Modified }]);
         return;
       }
 
@@ -43,7 +43,7 @@ export const StringComponent: React.FC = () => {
               : ElementStates.Default;
 
           return {
-            char: item,
+            value: item,
             state: elementState,
           };
         })
@@ -97,7 +97,7 @@ export const StringComponent: React.FC = () => {
           result.map((item, index) => {
             return (
               <li key={index}>
-                <Circle state={item.state} letter={item.char} />
+                <Circle letter={item.value} state={item.state} />
               </li>
             );
           })}

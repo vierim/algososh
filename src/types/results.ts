@@ -1,6 +1,11 @@
 import { ElementStates } from './element-states';
 
 export type TReverseStringResult = {
-  char: string;
+  value: string;
+  state: ElementStates;
+}[];
+
+export type TSortingResult = {
+  value: number;
   state: ElementStates;
 }[];

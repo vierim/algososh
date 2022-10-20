@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-import { randomArr, bubbleSorting } from './utils';
+import { randomArr, SortingArray } from './utils';
 
 import { Direction } from '../../types/direction';
 import { ElementStates } from '../../types/element-states';
@@ -32,7 +32,13 @@ export const SortingPage: React.FC = () => {
 
     if (result.length > 0) {
       setDirection(Direction.Ascending);
-      setSolution(bubbleSorting(result, Direction.Ascending));
+
+      const sortableArray = new SortingArray(result, method, Direction.Ascending);
+      const iterations = sortableArray.getSteps();
+      if(iterations) {
+        setSolution(iterations);
+      }
+
       startVisualization();
     }
   };
@@ -42,7 +48,13 @@ export const SortingPage: React.FC = () => {
 
     if (result.length > 0) {
       setDirection(Direction.Descending);
-      setSolution(bubbleSorting(result, Direction.Descending));
+
+      const sortableArray = new SortingArray(result, method, Direction.Descending);
+      const iterations = sortableArray.getSteps();
+      if(iterations) {
+        setSolution(iterations);
+      }
+
       startVisualization();
     }
   };

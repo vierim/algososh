@@ -1,39 +1,88 @@
 import React, { useEffect, useState } from 'react';
+
+import { SHORT_DELAY_IN_MS } from '../../constants/delays';
+import { randomArr, bubbleSorting } from './utils';
+
 import { Direction } from '../../types/direction';
+import { ElementStates } from '../../types/element-states';
+import { TSortingResult } from '../../types';
+
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { RadioInput } from '../ui/radio-input/radio-input';
 import { Button } from '../ui/button/button';
 import { Column } from '../ui/column/column';
-import { randomArr } from './utils';
 
 import styles from './sorting.module.css';
 
 export const SortingPage: React.FC = () => {
   const [method, setMethod] = useState<string>('choice');
-  const [result, setResult] = useState<number[]>([]);
-  //const [solution, setSolution] = useState<number[]>([]);
-  //const [step, setStep] = useState(-1);
+  const [direction, setDirection] = useState<Direction>(Direction.Ascending);
+  const [result, setResult] = useState<TSortingResult>([]);
+  const [solution, setSolution] = useState<TSortingResult[]>([]);
+  const [step, setStep] = useState(-1);
   const [runnig, setRunning] = useState(false);
-  //const [error, setError] = useState(false);
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const method = evt.target.value;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const method = e.target.value;
     setMethod(method);
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleAscendingClick = (e: React.MouseEvent) => {
     e.preventDefault();
+
+    if (result.length > 0) {
+      setDirection(Direction.Ascending);
+      setSolution(bubbleSorting(result, Direction.Ascending));
+      startVisualization();
+    }
+  };
+
+  const handleDescendingClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (result.length > 0) {
+      setDirection(Direction.Descending);
+      setSolution(bubbleSorting(result, Direction.Descending));
+      startVisualization();
+    }
   };
 
   const handleSetNewArray = () => {
-    setResult(randomArr());
+    setResult(
+      randomArr().map((item) => {
+        return { value: item, state: ElementStates.Default };
+      })
+    );
   };
 
-  const getNextElements = () => {};
+  const startVisualization = () => {
+    setRunning(true);
+    setStep(0);
+  };
+
+  const getNextStep = () => {
+    if (step < 0) {
+      return;
+    }
+
+    if (step >= solution.length) {
+      setRunning(false);
+      return;
+    }
+
+    setResult(
+      solution[step].map((item) => {
+        return { ...item };
+      })
+    );
+    setStep((prevStep) => prevStep + 1);
+  };
 
   useEffect(() => {
+    window.setTimeout(() => getNextStep(), SHORT_DELAY_IN_MS);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [step]);
 
   return (
     <SolutionLayout title="Сортировка массива">
@@ -45,6 +94,7 @@ export const SortingPage: React.FC = () => {
             value={'choice'}
             checked={method === 'choice'}
             label={'Выбор'}
+            disabled={runnig}
           />
           <RadioInput
             name={'kind'}
@@ -52,6 +102,7 @@ export const SortingPage: React.FC = () => {
             value={'bubble'}
             checked={method === 'bubble'}
             label={'Пузырек'}
+            disabled={runnig}
           />
         </fieldset>
         <fieldset className={styles.combination}>
@@ -59,17 +110,21 @@ export const SortingPage: React.FC = () => {
             type={'submit'}
             text={'По возрастанию'}
             sorting={Direction.Ascending}
+            value={'ascending'}
             style={{ minWidth: '205px' }}
-            onClick={handleClick}
-            isLoader={runnig}
+            onClick={handleAscendingClick}
+            isLoader={runnig && direction === Direction.Ascending}
+            disabled={runnig && direction === Direction.Descending}
           />
           <Button
             type={'submit'}
             text={'По убыванию'}
             sorting={Direction.Descending}
+            value={'descending'}
             style={{ minWidth: '205px' }}
-            onClick={handleClick}
-            isLoader={runnig}
+            onClick={handleDescendingClick}
+            isLoader={runnig && direction === Direction.Descending}
+            disabled={runnig && direction === Direction.Ascending}
           />
         </fieldset>
         <Button
@@ -77,15 +132,17 @@ export const SortingPage: React.FC = () => {
           text={'Новый массив'}
           onClick={handleSetNewArray}
           style={{ minWidth: '205px' }}
+          disabled={runnig}
         />
       </form>
 
       <ul className={styles.results}>
-        {result.length > 0 &&
+        {result &&
+          result.length > 0 &&
           result.map((item, index) => {
             return (
               <li key={index}>
-                <Column index={item} />
+                <Column index={item.value} state={item.state} />
               </li>
             );
           })}

@@ -9,3 +9,8 @@ export type TSortingResult = {
   value: number;
   state: ElementStates;
 }[];
+
+export type TStackResult = {
+  value: string;
+  state: ElementStates;
+}[];

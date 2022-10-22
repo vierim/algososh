@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { DELAY_IN_MS } from '../../constants/delays';
+import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { Queue } from './utils';
 
 import { Actions } from '../../types/actions';
@@ -30,108 +30,64 @@ export const QueuePage: React.FC = () => {
     setValue(evt.target.value);
   };
 
-  const handleAddClick = (evt: React.MouseEvent) => {
-    // if(!queueRef.current.isFull()) {
-    queueRef.current.insert(value);
-    console.log(queueRef.current);
-    showDataFromQueue();
-    setValue('');
-    // setResult(queueRef.current.getAllItems().map((item) => item));
-    // }
-
-    // setLoader(true);
-    // setValue('');
-
-    // queueRef.current.push(value);
-    // setAction(Actions.Push);
-  };
-
-  const handleRemoveClick = () => {
-    // if(!queueRef.current.isEmpty()) {
-    queueRef.current.remove();
-    console.log(queueRef.current);
-    showDataFromQueue();
-    // setResult(queueRef.current.getAllItems().map((item) => item));
-    // }
-    // setLoader(true);
-
-    // queueRef.current.pop();
-    // setAction(Actions.Pop);
-  };
+  const handleAddClick = () => setAction(Actions.Push);
+  const handleRemoveClick = () => setAction(Actions.Pop);
 
   const handleCleanClick = () => {
     queueRef.current.clear();
-    console.log(queueRef.current);
     showDataFromQueue();
   };
 
-  const showIncreaseStack = () => {
-    // showDataFromStack();
-    // setAction(Actions.Waiting);
-    // window.setTimeout(() => setInstant(-1), DELAY_IN_MS);
+  const showIncreaseQueue = () => {
+    window.setTimeout(() => {
+      queueRef.current.insert(value);
+      setValue('');
+      showDataFromQueue();
+      setAction(Actions.Waiting);
+
+      window.setTimeout(() => setInstant(-1), SHORT_DELAY_IN_MS);
+    }, SHORT_DELAY_IN_MS);
   };
 
   const showDecreaseStack = () => {
-    // if (result.length > 0) {
-    //   setResult((prev) =>
-    //     prev.map((item, index) => {
-    //       return {
-    //         value: item.value,
-    //         state:
-    //           index === instant
-    //             ? ElementStates.Changing
-    //             : ElementStates.Default,
-    //       };
-    //     })
-    //   );
-    // }
-    // setAction(Actions.Waiting);
-    // window.setTimeout(() => setInstant(-1), DELAY_IN_MS);
+    window.setTimeout(() => {
+      queueRef.current.remove();
+      showDataFromQueue();
+      setAction(Actions.Waiting);
+
+      setInstant(-1);
+    }, SHORT_DELAY_IN_MS);
   };
 
   const showDataFromQueue = () => {
     const actualQueue = queueRef.current.getAllItems().map((item) => item);
     setResult(actualQueue);
-
-    // if (stack && stack.length > 0) {
-    // setResult(actualQueue);
-    //     stack.map((item, index) => {
-    //       return {
-    //         value: item,
-    //         state:
-    //           index === instant
-    //             ? ElementStates.Changing
-    //             : ElementStates.Default,
-    //       };
-    //     })
-    //   );
-    // } else {
-    //   setResult([]);
-    // }
   };
 
   useEffect(() => {
-    // if (action === Actions.Push) {
-    //   showIncreaseStack();
-    // } else if (action === Actions.Pop) {
-    //   showDecreaseStack();
-    // } else {
-    //   showDataFromStack();
-    //   setLoader(false);
-    // }
+    if (action === Actions.Push) {
+      showIncreaseQueue();
+    } else if (action === Actions.Pop) {
+      showDecreaseStack();
+    } else {
+      showDataFromQueue();
+      setLoader(false);
+    }
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instant]);
 
   useEffect(() => {
-    // if (action === Actions.Push) {
-    //   setInstant(queueRef.current.getLastIndex());
-    // } else if (action === Actions.Pop) {
-    //   if (queueRef.current.getSize() > 0) {
-    //     setInstant(queueRef.current.getLastIndex() + 1);
-    //   } else {
-    //     setInstant(queueRef.current.getLastIndex());
-    //   }
-    // }
+    if (action === Actions.Push) {
+      setInstant(
+        queueRef.current.isEmpty()
+          ? queueRef.current.getTailPosition()
+          : queueRef.current.getTailPosition() + 1
+      );
+    } else if (action === Actions.Pop) {
+      setInstant(queueRef.current.getHeadPosition());
+    }
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [action]);
 
@@ -198,7 +154,11 @@ export const QueuePage: React.FC = () => {
                   index={index}
                   head={isHead ? 'head' : undefined}
                   tail={isTail ? 'tail' : undefined}
-                  // state={item.state}
+                  state={
+                    index === instant
+                      ? ElementStates.Changing
+                      : ElementStates.Default
+                  }
                 />
               </li>
             );

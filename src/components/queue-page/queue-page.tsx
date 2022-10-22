@@ -17,7 +17,9 @@ const QUEUE_LEN = 7;
 
 export const QueuePage: React.FC = () => {
   const [value, setValue] = useState('');
-  const [result, setResult] = useState<Array<string | null>>(new Array(QUEUE_LEN).fill(null));
+  const [result, setResult] = useState<Array<string | null>>(
+    new Array(QUEUE_LEN).fill(null)
+  );
   const [action, setAction] = useState<Actions>(Actions.Waiting);
   const [instant, setInstant] = useState<number>(-1);
   const [loader, setLoader] = useState<boolean>(false);
@@ -30,13 +32,13 @@ export const QueuePage: React.FC = () => {
 
   const handleAddClick = (evt: React.MouseEvent) => {
     // if(!queueRef.current.isFull()) {
-      queueRef.current.insert(value);
-      console.log(queueRef.current);
-      showDataFromQueue();
-      setValue('');
-      // setResult(queueRef.current.getAllItems().map((item) => item));
+    queueRef.current.insert(value);
+    console.log(queueRef.current);
+    showDataFromQueue();
+    setValue('');
+    // setResult(queueRef.current.getAllItems().map((item) => item));
     // }
-    
+
     // setLoader(true);
     // setValue('');
 
@@ -46,10 +48,10 @@ export const QueuePage: React.FC = () => {
 
   const handleRemoveClick = () => {
     // if(!queueRef.current.isEmpty()) {
-      queueRef.current.remove();
-      console.log(queueRef.current);
-      showDataFromQueue();
-      // setResult(queueRef.current.getAllItems().map((item) => item));
+    queueRef.current.remove();
+    console.log(queueRef.current);
+    showDataFromQueue();
+    // setResult(queueRef.current.getAllItems().map((item) => item));
     // }
     // setLoader(true);
 
@@ -58,13 +60,13 @@ export const QueuePage: React.FC = () => {
   };
 
   const handleCleanClick = () => {
-    // queueRef.current.clear();
-    // showDataFromStack();
+    queueRef.current.clear();
+    console.log(queueRef.current);
+    showDataFromQueue();
   };
 
   const showIncreaseStack = () => {
     // showDataFromStack();
-
     // setAction(Actions.Waiting);
     // window.setTimeout(() => setInstant(-1), DELAY_IN_MS);
   };
@@ -83,9 +85,7 @@ export const QueuePage: React.FC = () => {
     //     })
     //   );
     // }
-
     // setAction(Actions.Waiting);
-
     // window.setTimeout(() => setInstant(-1), DELAY_IN_MS);
   };
 
@@ -94,7 +94,7 @@ export const QueuePage: React.FC = () => {
     setResult(actualQueue);
 
     // if (stack && stack.length > 0) {
-      // setResult(actualQueue);
+    // setResult(actualQueue);
     //     stack.map((item, index) => {
     //       return {
     //         value: item,
@@ -119,7 +119,6 @@ export const QueuePage: React.FC = () => {
     //   showDataFromStack();
     //   setLoader(false);
     // }
-
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instant]);
 
@@ -133,7 +132,6 @@ export const QueuePage: React.FC = () => {
     //     setInstant(queueRef.current.getLastIndex());
     //   }
     // }
-
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [action]);
 
@@ -160,27 +158,46 @@ export const QueuePage: React.FC = () => {
             text={'Удалить'}
             onClick={handleRemoveClick}
             isLoader={loader}
-            disabled={result.length === 0}
+            disabled={queueRef.current.isEmpty()}
           />
         </fieldset>
         <Button
           type={'button'}
           text={'Очистить'}
           onClick={handleCleanClick}
-          disabled={loader || result.length === 0}
+          disabled={
+            result.every((item) => item === null) &&
+            queueRef.current.getTailPosition() !== queueRef.current.getSize()
+          }
         />
       </form>
 
       <ul className={styles.results}>
         {result.length > 0 &&
           result.map((item, index) => {
+            let isHead: boolean;
+            let isTail: boolean;
+
+            let isEmpty = queueRef.current.isEmpty();
+            let nullablePosition =
+              queueRef.current.getHeadPosition() === 0 &&
+              queueRef.current.getTailPosition() === 0;
+
+            if (isEmpty && nullablePosition) {
+              isHead = false;
+              isTail = false;
+            } else {
+              isHead = index === queueRef.current.getHeadPosition();
+              isTail = index === queueRef.current.getTailPosition();
+            }
+
             return (
               <li key={index}>
                 <Circle
                   letter={item ? item : ''}
                   index={index}
-                  head={index === queueRef.current.getHeadPosition() ? 'head' : undefined}
-                  tail={index === queueRef.current.getTailPosition() ? 'tail' : undefined}
+                  head={isHead ? 'head' : undefined}
+                  tail={isTail ? 'tail' : undefined}
                   // state={item.state}
                 />
               </li>

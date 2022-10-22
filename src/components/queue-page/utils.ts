@@ -1,14 +1,13 @@
 interface IQueue {
   insert: (item: string) => void;
   remove: () => void;
-
+  peak: () => string | null;
+  clear: () => void;
   isEmpty: () => boolean;
   isFull: () => boolean;
   getHeadPosition: () => number;
   getTailPosition: () => number;
-  // clear: () => void;
-  // getSize: () => number;
-  // getLastIndex: () => number;
+  getSize: () => number;
   getAllItems: () => Array<string | null>;
 }
 
@@ -27,59 +26,53 @@ export class Queue implements IQueue {
 
   insert = (item: string) => {
     if (this.isFull()) {
-      throw new Error("Maximum length exceeded");
+      throw new Error('Maximum length exceeded');
+    }
+
+    if (!this.isEmpty()) {
+      this.tail++;
     }
 
     this.container[this.tail] = item;
-
-    this.tail++;
-
     this.length++;
   };
 
   remove = () => {
     if (this.isEmpty()) {
-      throw new Error("No elements in the queue");
+      throw new Error('No elements in the queue');
     }
 
     this.container[this.head] = null;
-    this.head++;
     this.length--;
+
+    if (this.head !== this.size - 1) {
+      if (this.head !== this.tail) {
+        this.head++;
+      }
+    } else {
+      this.tail++;
+    }
   };
 
-  isEmpty = () => {
-    return this.length === 0 && this.head < this.size - 1;
+  peak = () => this.container[this.head];
+
+  clear = () => {
+    this.container = Array(this.size).fill(null);
+
+    this.head = 0;
+    this.tail = 0;
+    this.length = 0;
   };
 
-  isFull = () => {
-    return this.length === this.size - 1;
-  };
+  isEmpty = () => this.length === 0;
 
-  getHeadPosition = () => {
-    // if(this.length === 0 && this.head === 0) {
-    //   return false;
-    // }
+  isFull = () => this.tail >= this.size - 1;
 
-    return this.head;
-  }
+  getHeadPosition = () => this.head;
 
-  getTailPosition = () => {
-    // if(this.length === 0 && this.tail === 0) {
-    //   return false;
-    // }
+  getTailPosition = () => this.tail;
 
-    return this.tail;
-  }
-
-  // clear = () => {
-  //   if (this.getSize() > 0) {
-  //     this.container = [];
-  //   }
-  // };
-
-  //getSize = () => this.container.length;
-
-  //getLastIndex = () => (this.getSize() > 0 ? this.getSize() - 1 : 0);
+  getSize = () => this.size;
 
   getAllItems = () => this.container;
 }

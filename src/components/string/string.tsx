@@ -89,6 +89,7 @@ export const StringComponent: React.FC = () => {
           text={'Развернуть'}
           onClick={handleClick}
           isLoader={runnig}
+          disabled={value.length === 0}
         />
       </form>
 

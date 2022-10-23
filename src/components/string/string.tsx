@@ -17,7 +17,7 @@ export const StringComponent: React.FC = () => {
   const [value, setValue] = useState('');
   const [result, setResult] = useState<TReverseStringResult>([]);
   const [step, setStep] = useState<number>(-1);
-  const [runnig, setRunning] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(false);
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setValue(evt.target.value);
@@ -49,7 +49,7 @@ export const StringComponent: React.FC = () => {
         })
       );
 
-      setRunning(true);
+      setLoader(true);
       setStep(0);
     }
   };
@@ -60,7 +60,7 @@ export const StringComponent: React.FC = () => {
     }
 
     if (step >= Math.floor(result.length / 2)) {
-      setRunning(false);
+      setLoader(false);
       return;
     }
 
@@ -88,7 +88,7 @@ export const StringComponent: React.FC = () => {
           type={'submit'}
           text={'Развернуть'}
           onClick={handleClick}
-          isLoader={runnig}
+          isLoader={loader}
           disabled={value.length === 0}
         />
       </form>

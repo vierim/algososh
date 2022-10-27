@@ -26,32 +26,30 @@ export const StringComponent: React.FC = () => {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (value.length > 0) {
-      setResult([]);
-      let chars = value.split('');
+    setResult([]);
+    let chars = value.split('');
 
-      if (chars.length === 1) {
-        setResult([{ value: chars[0], state: ElementStates.Modified }]);
-        return;
-      }
-
-      setResult(
-        chars.map((item, index) => {
-          let elementState =
-            index === 0 || index === value.length - 1
-              ? ElementStates.Changing
-              : ElementStates.Default;
-
-          return {
-            value: item,
-            state: elementState,
-          };
-        })
-      );
-
-      setLoader(true);
-      setStep(0);
+    if (chars.length === 1) {
+      setResult([{ value: chars[0], state: ElementStates.Modified }]);
+      return;
     }
+
+    setResult(
+      chars.map((item, index) => {
+        let elementState =
+          index === 0 || index === value.length - 1
+            ? ElementStates.Changing
+            : ElementStates.Default;
+
+        return {
+          value: item,
+          state: elementState,
+        };
+      })
+    );
+
+    setLoader(true);
+    setStep(0);
   };
 
   const reverseElements = () => {

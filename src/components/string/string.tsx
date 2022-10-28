@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { DELAY_IN_MS } from '../../constants/delays';
-import { swapElements } from './utils';
+import { ReverseRange } from './utils';
 
 import { ElementStates } from '../../types/element-states';
-import type { TReverseStringResult } from '../../types';
+import type { TReverseRangeResult } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -13,11 +13,60 @@ import { Circle } from '../ui/circle/circle';
 
 import styles from './string.module.css';
 
-export const StringComponent: React.FC = () => {
+export const StringComponent: FC = () => {
+  const range = useRef(new ReverseRange<string>());
+
   const [value, setValue] = useState('');
-  const [result, setResult] = useState<TReverseStringResult>([]);
+  const [result, setResult] = useState<TReverseRangeResult>([]);
   const [step, setStep] = useState<number>(-1);
   const [loader, setLoader] = useState<boolean>(false);
+
+  const getElementState = (itemIndex: number): ElementStates => {
+    if (
+      itemIndex === range.current.startPosition() ||
+      itemIndex === range.current.endPosition()
+    ) {
+      if (range.current.isReversed) {
+        return ElementStates.Modified;
+      } else {
+        return ElementStates.Changing;
+      }
+    }
+
+    if (
+      itemIndex < range.current.startPosition() ||
+      itemIndex > range.current.endPosition()
+    ) {
+      return ElementStates.Modified;
+    }
+
+    return ElementStates.Default;
+  };
+
+  const showCurrentResult = () => {
+    setResult(
+      range.current.getState().map((item, index) => {
+        return {
+          value: item,
+          state: getElementState(index),
+        };
+      })
+    );
+  };
+
+  const reverseElements = () => {
+    range.current.nextStep();
+    showCurrentResult();
+
+    setStep((prevStep) => prevStep + 1);
+  };
+
+  const displayAlgorithm = () => {
+    setLoader(true);
+    setValue('');
+    setStep(0);
+    //window.setTimeout(() => setStep(0), DELAY_IN_MS);
+  };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setValue(evt.target.value);
@@ -26,49 +75,22 @@ export const StringComponent: React.FC = () => {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    setResult([]);
-    let chars = value.split('');
+    range.current.setState(value.split(''));
 
-    if (chars.length === 1) {
-      setResult([{ value: chars[0], state: ElementStates.Modified }]);
-      return;
-    }
-
-    setResult(
-      chars.map((item, index) => {
-        let elementState =
-          index === 0 || index === value.length - 1
-            ? ElementStates.Changing
-            : ElementStates.Default;
-
-        return {
-          value: item,
-          state: elementState,
-        };
-      })
-    );
-
-    setLoader(true);
-    setStep(0);
-  };
-
-  const reverseElements = () => {
-    if (step < 0) {
-      return;
-    }
-
-    if (step >= Math.floor(result.length / 2)) {
-      setLoader(false);
-      return;
-    }
-
-    let iteration = swapElements(result, step);
-    setResult(iteration);
-    setStep((prevStep) => prevStep + 1);
+    showCurrentResult();
+    displayAlgorithm();
   };
 
   useEffect(() => {
-    window.setTimeout(() => reverseElements(), DELAY_IN_MS);
+    if (step !== -1) {
+      if (!range.current.isReversed) {
+        window.setTimeout(() => reverseElements(), DELAY_IN_MS);
+      } else {
+        setLoader(false);
+        setStep(-1);
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 

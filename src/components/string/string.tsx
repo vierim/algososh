@@ -68,11 +68,13 @@ export const StringComponent: FC = () => {
   };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = evt.target.value;
-    const lastChar = newValue[newValue.length - 1];
+    if (!loader) {
+      const newValue = evt.target.value;
+      const lastChar = newValue[newValue.length - 1];
 
-    if (lastChar !== ' ') {
-      setValue(evt.target.value);
+      if (lastChar !== ' ') {
+        setValue(evt.target.value);
+      }
     }
   };
 

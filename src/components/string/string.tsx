@@ -15,28 +15,27 @@ import styles from './string.module.css';
 
 export const StringComponent: FC = () => {
   const range = useRef(new ReverseRange<string>());
+  const timerId = useRef<NodeJS.Timeout>();
 
   const [value, setValue] = useState('');
   const [result, setResult] = useState<TReverseRangeResult>([]);
-  const [step, setStep] = useState<number>(-1);
   const [loader, setLoader] = useState<boolean>(false);
 
   const getElementState = (itemIndex: number): ElementStates => {
-    if (
-      itemIndex === range.current.startPosition() ||
-      itemIndex === range.current.endPosition()
-    ) {
-      if (range.current.isReversed) {
+    
+    const startPosition = range.current.startPosition();
+    const endPosition = range.current.endPosition();
+    const isReversed = range.current.isReversed;
+
+    if (itemIndex === startPosition || itemIndex === endPosition) {
+      if (isReversed) {
         return ElementStates.Modified;
       } else {
-        return ElementStates.Changing;
+        return timerId.current ? ElementStates.Changing : ElementStates.Default;
       }
     }
 
-    if (
-      itemIndex < range.current.startPosition() ||
-      itemIndex > range.current.endPosition()
-    ) {
+    if (itemIndex < startPosition || itemIndex > endPosition) {
       return ElementStates.Modified;
     }
 
@@ -45,7 +44,7 @@ export const StringComponent: FC = () => {
 
   const showCurrentResult = () => {
     setResult(
-      range.current.getState().map((item, index) => {
+      range.current.getRange().map((item, index) => {
         return {
           value: item,
           state: getElementState(index),
@@ -55,17 +54,18 @@ export const StringComponent: FC = () => {
   };
 
   const reverseElements = () => {
-    range.current.nextStep();
+    if (!range.current.isReversed) {
+      range.current.nextStep();
+
+      if (range.current.isReversed && timerId.current) {
+        clearInterval(timerId.current);
+        timerId.current = undefined;
+
+        setLoader(false);
+      }
+    }
+
     showCurrentResult();
-
-    setStep((prevStep) => prevStep + 1);
-  };
-
-  const displayAlgorithm = () => {
-    setLoader(true);
-    setValue('');
-    setStep(0);
-    //window.setTimeout(() => setStep(0), DELAY_IN_MS);
   };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,24 +75,25 @@ export const StringComponent: FC = () => {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    range.current.setState(value.split(''));
+    range.current.setRange(value.split(''));
 
+    setLoader(true);
+    setValue('');
     showCurrentResult();
-    displayAlgorithm();
+
+    window.setTimeout(() => {
+      timerId.current = setInterval(reverseElements, DELAY_IN_MS);
+      showCurrentResult();
+    }, DELAY_IN_MS);
   };
 
   useEffect(() => {
-    if (step !== -1) {
-      if (!range.current.isReversed) {
-        window.setTimeout(() => reverseElements(), DELAY_IN_MS);
-      } else {
-        setLoader(false);
-        setStep(-1);
+    return () => {
+      if (timerId.current) {
+        clearInterval(timerId.current);
       }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
+    };
+  }, []);
 
   return (
     <SolutionLayout title="Строка">

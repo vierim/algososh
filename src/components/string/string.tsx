@@ -22,7 +22,7 @@ export const StringComponent: FC = () => {
   const [loader, setLoader] = useState<boolean>(false);
 
   const getElementState = (itemIndex: number): ElementStates => {
-    
+
     const startPosition = range.current.startPosition();
     const endPosition = range.current.endPosition();
     const isReversed = range.current.isReversed;
@@ -69,7 +69,12 @@ export const StringComponent: FC = () => {
   };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(evt.target.value);
+    const newValue = evt.target.value;
+    const lastChar = newValue[newValue.length - 1];
+
+    if(lastChar !== ' ') {
+      setValue(evt.target.value);
+    }
   };
 
   const handleClick = (e: React.MouseEvent) => {

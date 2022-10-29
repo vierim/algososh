@@ -1,26 +1,30 @@
-interface IReverseRange<T> {
-  _swap: () => void;
-  setRange: (items: T[]) => void;
-  getRange: () => T[];
-  nextStep: () => void;
-  startPosition: () => number;
-  endPosition: () => number;
-}
-
-export class ReverseRange<T> implements IReverseRange<T> {
+export class ReverseRange<T> {
   private _range: T[] = [];
   private _start: number = 0;
   private _end: number = 0;
 
-  isReversed: boolean = false;
+  public isReversed: boolean = false;
 
-  _swap() {
+  protected _swap() {
     let tmp = this._range[this._start];
     this._range[this._start] = this._range[this._end];
     this._range[this._end] = tmp;
   }
 
-  setRange(items: T[]) {
+  public nextStep() {
+    if (!this.isReversed) {
+      this._swap();
+
+      this._start++;
+      this._end--;
+    }
+
+    if (this._start >= this._end) {
+      this.isReversed = true;
+    }
+  }
+
+  set range(items: T[]) {
     if (items.length > 0) {
       this._range = [...items];
 
@@ -36,23 +40,15 @@ export class ReverseRange<T> implements IReverseRange<T> {
     }
   }
 
-  getRange() {
+  get range() {
     return this._range;
   }
 
-  nextStep() {
-    if (!this.isReversed) {
-      this._swap();
-
-      this._start++;
-      this._end--;
-    }
-
-    if (this._start >= this._end) {
-      this.isReversed = true;
-    }
+  get start() {
+    return this._start;
   }
 
-  startPosition = () => this._start;
-  endPosition = () => this._end;
+  get end() {
+    return this._end;
+  }
 }

@@ -14,7 +14,7 @@ import { Circle } from '../ui/circle/circle';
 import styles from './string.module.css';
 
 export const StringComponent: FC = () => {
-  const range = useRef(new ReverseRange<string>());
+  const rangeRef = useRef(new ReverseRange<string>());
   const timerId = useRef<NodeJS.Timeout>();
 
   const [value, setValue] = useState('');
@@ -22,9 +22,9 @@ export const StringComponent: FC = () => {
   const [loader, setLoader] = useState<boolean>(false);
 
   const getElementState = (itemIndex: number): ElementStates => {
-    const startPosition = range.current.startPosition();
-    const endPosition = range.current.endPosition();
-    const isReversed = range.current.isReversed;
+    const startPosition = rangeRef.current.start;
+    const endPosition = rangeRef.current.end;
+    const isReversed = rangeRef.current.isReversed;
 
     if (itemIndex === startPosition || itemIndex === endPosition) {
       if (isReversed) {
@@ -43,7 +43,7 @@ export const StringComponent: FC = () => {
 
   const showCurrentResult = () => {
     setResult(
-      range.current.getRange().map((item, index) => {
+      rangeRef.current.range.map((item, index) => {
         return {
           value: item,
           state: getElementState(index),
@@ -53,10 +53,10 @@ export const StringComponent: FC = () => {
   };
 
   const reverseElements = () => {
-    if (!range.current.isReversed) {
-      range.current.nextStep();
+    if (!rangeRef.current.isReversed) {
+      rangeRef.current.nextStep();
 
-      if (range.current.isReversed && timerId.current) {
+      if (rangeRef.current.isReversed && timerId.current) {
         clearInterval(timerId.current);
         timerId.current = undefined;
 
@@ -79,11 +79,11 @@ export const StringComponent: FC = () => {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    range.current.setRange(value.split(''));
+    rangeRef.current.range = value.split('');
     setValue('');
     showCurrentResult();
-    
-    if (!range.current.isReversed) {
+
+    if (!rangeRef.current.isReversed) {
       setLoader(true);
 
       window.setTimeout(() => {

@@ -37,12 +37,12 @@ export class ReverseRange<T> implements IReverseRange<T> {
   nextStep() {
     if (!this.isReversed) {
       this._swap();
+
+      this._start++;
+      this._end--;
     }
-
-    this._start++;
-    this._end--;
-
-    if(this._start >= this._end) {
+    
+    if (this._start >= this._end) {
       this.isReversed = true;
     }
   }

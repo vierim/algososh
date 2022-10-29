@@ -1,3 +1,3 @@
-import { TSortingResult, TReverseStringResult, TStackResult } from "./results";
+import { TSortingResult, TReverseRangeResult, TStackResult } from "./results";
 
-export type { TSortingResult, TReverseStringResult, TStackResult };
+export type { TSortingResult, TReverseRangeResult, TStackResult };

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { DELAY_IN_MS } from '../../constants/delays';
-import { swapElements } from './utils';
+import { ReverseRange } from './utils';
 
 import { ElementStates } from '../../types/element-states';
-import type { TReverseStringResult } from '../../types';
+import type { TReverseRangeResult } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -13,66 +13,95 @@ import { Circle } from '../ui/circle/circle';
 
 import styles from './string.module.css';
 
-export const StringComponent: React.FC = () => {
+export const StringComponent: FC = () => {
+  const rangeRef = useRef(new ReverseRange<string>());
+  const timerId = useRef<NodeJS.Timeout>();
+
   const [value, setValue] = useState('');
-  const [result, setResult] = useState<TReverseStringResult>([]);
-  const [step, setStep] = useState<number>(-1);
+  const [result, setResult] = useState<TReverseRangeResult>([]);
   const [loader, setLoader] = useState<boolean>(false);
 
+  const getElementState = (itemIndex: number): ElementStates => {
+    const startPosition = rangeRef.current.start;
+    const endPosition = rangeRef.current.end;
+    const isReversed = rangeRef.current.isReversed;
+
+    if (itemIndex === startPosition || itemIndex === endPosition) {
+      if (isReversed) {
+        return ElementStates.Modified;
+      } else {
+        return timerId.current ? ElementStates.Changing : ElementStates.Default;
+      }
+    }
+
+    if (itemIndex < startPosition || itemIndex > endPosition) {
+      return ElementStates.Modified;
+    }
+
+    return ElementStates.Default;
+  };
+
+  const showCurrentResult = () => {
+    setResult(
+      rangeRef.current.range.map((item, index) => {
+        return {
+          value: item,
+          state: getElementState(index),
+        };
+      })
+    );
+  };
+
+  const reverseElements = () => {
+    if (!rangeRef.current.isReversed) {
+      rangeRef.current.nextStep();
+
+      if (rangeRef.current.isReversed && timerId.current) {
+        clearInterval(timerId.current);
+        timerId.current = undefined;
+
+        setLoader(false);
+      }
+    }
+
+    showCurrentResult();
+  };
+
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(evt.target.value);
+    if (!loader) {
+      const newValue = evt.target.value;
+      const lastChar = newValue[newValue.length - 1];
+
+      if (lastChar !== ' ') {
+        setValue(evt.target.value);
+      }
+    }
   };
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (value.length > 0) {
-      setResult([]);
-      let chars = value.split('');
+    rangeRef.current.range = value.split('');
+    setValue('');
+    showCurrentResult();
 
-      if (chars.length === 1) {
-        setResult([{ value: chars[0], state: ElementStates.Modified }]);
-        return;
-      }
-
-      setResult(
-        chars.map((item, index) => {
-          let elementState =
-            index === 0 || index === value.length - 1
-              ? ElementStates.Changing
-              : ElementStates.Default;
-
-          return {
-            value: item,
-            state: elementState,
-          };
-        })
-      );
-
+    if (!rangeRef.current.isReversed) {
       setLoader(true);
-      setStep(0);
-    }
-  };
 
-  const reverseElements = () => {
-    if (step < 0) {
-      return;
+      window.setTimeout(() => {
+        timerId.current = setInterval(reverseElements, DELAY_IN_MS);
+        showCurrentResult();
+      }, DELAY_IN_MS);
     }
-
-    if (step >= Math.floor(result.length / 2)) {
-      setLoader(false);
-      return;
-    }
-
-    let iteration = swapElements(result, step);
-    setResult(iteration);
-    setStep((prevStep) => prevStep + 1);
   };
 
   useEffect(() => {
-    window.setTimeout(() => reverseElements(), DELAY_IN_MS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
+    return () => {
+      if (timerId.current) {
+        clearInterval(timerId.current);
+      }
+    };
+  }, []);
 
   return (
     <SolutionLayout title="Строка">

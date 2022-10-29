@@ -1,6 +1,6 @@
 import { ElementStates } from './element-states';
 
-export type TReverseStringResult = {
+export type TReverseRangeResult = {
   value: string;
   state: ElementStates;
 }[];

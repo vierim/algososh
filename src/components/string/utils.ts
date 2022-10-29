@@ -24,9 +24,15 @@ export class ReverseRange<T> implements IReverseRange<T> {
     if (items.length > 0) {
       this._range = [...items];
 
-      this._start = 0;
-      this._end = items.length - 1;
-      this.isReversed = false;
+      if (this._range.length === 1) {
+        this._start = 0;
+        this._end = 0;
+        this.isReversed = true;
+      } else {
+        this._start = 0;
+        this._end = items.length - 1;
+        this.isReversed = false;
+      }
     }
   }
 
@@ -41,7 +47,7 @@ export class ReverseRange<T> implements IReverseRange<T> {
       this._start++;
       this._end--;
     }
-    
+
     if (this._start >= this._end) {
       this.isReversed = true;
     }

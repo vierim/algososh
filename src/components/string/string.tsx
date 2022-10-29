@@ -22,7 +22,6 @@ export const StringComponent: FC = () => {
   const [loader, setLoader] = useState<boolean>(false);
 
   const getElementState = (itemIndex: number): ElementStates => {
-
     const startPosition = range.current.startPosition();
     const endPosition = range.current.endPosition();
     const isReversed = range.current.isReversed;
@@ -72,7 +71,7 @@ export const StringComponent: FC = () => {
     const newValue = evt.target.value;
     const lastChar = newValue[newValue.length - 1];
 
-    if(lastChar !== ' ') {
+    if (lastChar !== ' ') {
       setValue(evt.target.value);
     }
   };
@@ -81,15 +80,17 @@ export const StringComponent: FC = () => {
     e.preventDefault();
 
     range.current.setRange(value.split(''));
-
-    setLoader(true);
     setValue('');
     showCurrentResult();
+    
+    if (!range.current.isReversed) {
+      setLoader(true);
 
-    window.setTimeout(() => {
-      timerId.current = setInterval(reverseElements, DELAY_IN_MS);
-      showCurrentResult();
-    }, DELAY_IN_MS);
+      window.setTimeout(() => {
+        timerId.current = setInterval(reverseElements, DELAY_IN_MS);
+        showCurrentResult();
+      }, DELAY_IN_MS);
+    }
   };
 
   useEffect(() => {

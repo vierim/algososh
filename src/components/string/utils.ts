@@ -1,3 +1,4 @@
+import { TGetElementState } from "../../types";
 import { ElementStates } from "../../types/element-states";
 
 export class ReverseRange<T> {
@@ -54,14 +55,6 @@ export class ReverseRange<T> {
     return this._end;
   }
 }
-
-type TGetElementState = ({
-  itemIndex: number;
-  startPosition: number;
-  endPosition: number;
-  isReversed: boolean;
-  timerLaunched: boolean;
-});
 
 export const getElementState = ({
   itemIndex,

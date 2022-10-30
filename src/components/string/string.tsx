@@ -22,7 +22,10 @@ export const StringComponent: FC = () => {
   const showCurrentResult = () => {
     setResult(
       rangeRef.current.range.map((item, itemIndex) => {
+        let itemId = Math.ceil(Math.random() * Date.now());
+
         return {
+          id: itemId,
           value: item,
           state: getElementState({
             itemIndex,
@@ -108,9 +111,9 @@ export const StringComponent: FC = () => {
 
       <ul className={styles.results}>
         {result.length > 0 &&
-          result.map((item, index) => {
+          result.map((item) => {
             return (
-              <li key={index}>
+              <li key={item.id}>
                 <Circle letter={item.value} state={item.state} />
               </li>
             );

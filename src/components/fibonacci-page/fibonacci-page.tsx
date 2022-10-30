@@ -18,7 +18,10 @@ export const FibonacciPage: FC = () => {
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(evt.target.value);
-    setValue(val);
+
+    if(val >= 0 && val <= 19) {
+      setValue(val);
+    }
   };
 
   const handleClick = (e: React.MouseEvent) => {
@@ -76,7 +79,7 @@ export const FibonacciPage: FC = () => {
           type={'submit'}
           text={'Рассчитать'}
           onClick={handleClick}
-          disabled={value < 0}
+          disabled={value < 1}
           isLoader={runnig}
         />
       </form>

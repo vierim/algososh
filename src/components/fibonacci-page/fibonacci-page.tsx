@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import { DELAY_IN_MS } from '../../constants/delays';
 import { getFibonacciNumbers } from './utils';
@@ -11,54 +11,53 @@ import { Circle } from '../ui/circle/circle';
 import styles from './fibonacci.module.css';
 
 export const FibonacciPage: FC = () => {
+  const fibonacciNumbers = useRef<number[]>([]);
+  const timerId = useRef<NodeJS.Timeout>();
+
   const [value, setValue] = useState(0);
-  const [result, setResult] = useState<string[]>([]);
-  const [solution, setSolution] = useState<number[]>([]);
-  const [step, setStep] = useState(-1);
-  const [runnig, setRunning] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [step, setStep] = useState(0);
+
+  const displayAlgorithm = () => {
+    timerId.current = setInterval(() => {
+      setStep((prevStep) => {
+        const nextStep = prevStep + 1;
+
+        if (nextStep >= fibonacciNumbers.current.length && timerId.current) {
+          setLoader(false);
+          clearInterval(timerId.current);
+        }
+
+        return nextStep;
+      });
+    }, DELAY_IN_MS);
+  };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(evt.target.value);
 
-    if(val >= 0 && val <= 19) {
+    if (val >= 0 && val <= 19) {
       setValue(val);
     }
   };
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    setResult([]);
 
-    
-
-    setSolution(getFibonacciNumbers(Number(value) + 1));
-    setRunning(true);
+    fibonacciNumbers.current = getFibonacciNumbers(Number(value));
     setStep(0);
-  };
+    setLoader(true);
 
-  const getNextElements = () => {
-    if (step > value + 1) {
-      setRunning(false);
-      return;
-    }
-
-    let iteration = [...result];
-    let el = solution[step];
-
-    if (el) {
-      iteration.push(String(el));
-      setResult(iteration);
-    }
-
-    setStep((prevStep) => prevStep + 1);
+    displayAlgorithm();
   };
 
   useEffect(() => {
-    if (solution.length > 0) {
-      window.setTimeout(() => getNextElements(), DELAY_IN_MS);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
+    return () => {
+      if (timerId.current) {
+        clearInterval(timerId.current);
+      }
+    };
+  }, []);
 
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
@@ -75,16 +74,16 @@ export const FibonacciPage: FC = () => {
           text={'Рассчитать'}
           onClick={handleClick}
           disabled={value < 1}
-          isLoader={runnig}
+          isLoader={loader}
         />
       </form>
 
       <ul className={styles.results}>
-        {result.length > 0 &&
-          result.map((item, index) => {
+        {fibonacciNumbers.current.length > 0 &&
+          fibonacciNumbers.current.slice(0, step).map((item, index) => {
             return (
               <li key={index}>
-                <Circle letter={item} index={index} />
+                <Circle letter={item.toString()} index={index} />
               </li>
             );
           })}

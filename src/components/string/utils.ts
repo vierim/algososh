@@ -1,3 +1,5 @@
+import { ElementStates } from "../../types/element-states";
+
 export class ReverseRange<T> {
   private _range: T[] = [];
   private _start: number = 0;
@@ -52,3 +54,33 @@ export class ReverseRange<T> {
     return this._end;
   }
 }
+
+type TGetElementState = ({
+  itemIndex: number;
+  startPosition: number;
+  endPosition: number;
+  isReversed: boolean;
+  timerLaunched: boolean;
+});
+
+export const getElementState = ({
+  itemIndex,
+  startPosition,
+  endPosition,
+  isReversed,
+  timerLaunched,
+}: TGetElementState): ElementStates => {
+  if (itemIndex === startPosition || itemIndex === endPosition) {
+    if (isReversed) {
+      return ElementStates.Modified;
+    } else {
+      return timerLaunched ? ElementStates.Changing : ElementStates.Default;
+    }
+  }
+
+  if (itemIndex < startPosition || itemIndex > endPosition) {
+    return ElementStates.Modified;
+  }
+
+  return ElementStates.Default;
+};

@@ -1,9 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
 import { DELAY_IN_MS } from '../../constants/delays';
-import { ReverseRange } from './utils';
-
-import { ElementStates } from '../../types/element-states';
+import { getElementState, ReverseRange } from './utils';
 import type { TReverseRangeResult } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
@@ -21,32 +19,18 @@ export const StringComponent: FC = () => {
   const [result, setResult] = useState<TReverseRangeResult>([]);
   const [loader, setLoader] = useState<boolean>(false);
 
-  const getElementState = (itemIndex: number): ElementStates => {
-    const startPosition = rangeRef.current.start;
-    const endPosition = rangeRef.current.end;
-    const isReversed = rangeRef.current.isReversed;
-
-    if (itemIndex === startPosition || itemIndex === endPosition) {
-      if (isReversed) {
-        return ElementStates.Modified;
-      } else {
-        return timerId.current ? ElementStates.Changing : ElementStates.Default;
-      }
-    }
-
-    if (itemIndex < startPosition || itemIndex > endPosition) {
-      return ElementStates.Modified;
-    }
-
-    return ElementStates.Default;
-  };
-
   const showCurrentResult = () => {
     setResult(
-      rangeRef.current.range.map((item, index) => {
+      rangeRef.current.range.map((item, itemIndex) => {
         return {
           value: item,
-          state: getElementState(index),
+          state: getElementState({
+            itemIndex,
+            startPosition: rangeRef.current.start,
+            endPosition: rangeRef.current.end,
+            isReversed: rangeRef.current.isReversed,
+            timerLaunched: timerId.current ? true : false,
+          }),
         };
       })
     );

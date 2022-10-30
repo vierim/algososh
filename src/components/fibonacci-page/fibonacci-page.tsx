@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+
+import { DELAY_IN_MS } from '../../constants/delays';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -6,9 +8,8 @@ import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 
 import styles from './fibonacci.module.css';
-import { DELAY_IN_MS } from '../../constants/delays';
 
-export const FibonacciPage: React.FC = () => {
+export const FibonacciPage: FC = () => {
   const [value, setValue] = useState(0);
   const [result, setResult] = useState<string[]>([]);
   const [solution, setSolution] = useState<number[]>([]);

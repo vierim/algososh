@@ -15,25 +15,15 @@ export const FibonacciPage: FC = () => {
   const [solution, setSolution] = useState<number[]>([]);
   const [step, setStep] = useState(-1);
   const [runnig, setRunning] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const val = Number(evt.target.value);
     setValue(val);
-
-    if (error && val >= 0) {
-      setError(false);
-    }
   };
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setResult([]);
-
-    if (value < 0) {
-      setError(true);
-      return;
-    } 
 
     const fib = (n: number): number[] => {
       let arr: number[] = [0, 1];
@@ -77,8 +67,6 @@ export const FibonacciPage: FC = () => {
       <form className={styles.form}>
         <Input
           type={'number'}
-          style={error ? { borderColor: 'red', color: 'red' } : undefined}
-          extraClass={'hasError'}
           max={19}
           isLimitText={true}
           value={value}
@@ -88,6 +76,7 @@ export const FibonacciPage: FC = () => {
           type={'submit'}
           text={'Рассчитать'}
           onClick={handleClick}
+          disabled={value < 0}
           isLoader={runnig}
         />
       </form>

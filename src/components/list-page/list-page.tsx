@@ -79,7 +79,7 @@ export const ListPage: React.FC = () => {
       index.length !== 0 &&
       value.length !== 0 &&
       Number.parseInt(index) > -1 &&
-      Number.parseInt(index) < linkedList.current.listSize + 1
+      Number.parseInt(index) < linkedList.current.listSize
     );
   };
 

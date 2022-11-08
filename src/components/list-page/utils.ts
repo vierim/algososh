@@ -124,16 +124,16 @@ export class LinkedList<T> implements ILinkedList<T> {
   }
 
   deleteTail() {
-    if (this.size < 2) {
+    if (this.size === 1) {
       this.head = null;
       this.tail = null;
       this.size = 0;
     } else {
       let current = this.head;
-      let i = 0;
+      let i = 1;
 
       if (current) {
-        while (i !== this.size - 2) {
+        while (i !== this.size - 1) {
           if (current.next) {
             current = current.next;
           }

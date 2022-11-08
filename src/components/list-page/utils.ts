@@ -16,31 +16,32 @@ interface ILinkedList<T> {
   deleteHead: () => void;
   deleteTail: () => void;
   toArray: () => Array<T>;
+  listSize: number;
 }
 
 export class LinkedList<T> implements ILinkedList<T> {
   head: LinkedListNode<T> | null;
   tail: LinkedListNode<T> | null;
-  private size: number;
+  private _size: number;
 
   constructor() {
     this.head = null;
     this.tail = null;
-    this.size = 0;
+    this._size = 0;
   }
 
   prepend(node: T) {
     const newNode = new LinkedListNode(node);
 
-    if (this.size === 0) {
+    if (this._size === 0) {
       this.head = newNode;
       this.tail = newNode;
-      this.size++;
+      this._size++;
     } else {
       if (this.head) {
         newNode.next = this.head;
         this.head = newNode;
-        this.size++;
+        this._size++;
       }
     }
   }
@@ -48,16 +49,16 @@ export class LinkedList<T> implements ILinkedList<T> {
   append(node: T) {
     const newNode = new LinkedListNode(node);
 
-    if (this.size === 0) {
+    if (this._size === 0) {
       this.head = newNode;
       this.tail = newNode;
-      this.size++;
+      this._size++;
     } else {
       if (this.tail) {
         this.tail.next = newNode;
       }
       this.tail = newNode;
-      this.size++;
+      this._size++;
     }
   }
 
@@ -86,7 +87,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 
     newNode.next = current;
     
-    this.size++;
+    this._size++;
   }
 
   deleteByIndex(index: number) {
@@ -107,33 +108,33 @@ export class LinkedList<T> implements ILinkedList<T> {
       prev.next = current.next;
     }
     
-    this.size--;
+    this._size--;
   }
 
   deleteHead() {
-    if (this.size < 2) {
+    if (this._size < 2) {
       this.head = null;
       this.tail = null;
-      this.size = 0;
+      this._size = 0;
     } else {
       if (this.head && this.head.next) {
         this.head = this.head.next;
-        this.size--;
+        this._size--;
       }
     }
   }
 
   deleteTail() {
-    if (this.size === 1) {
+    if (this._size === 1) {
       this.head = null;
       this.tail = null;
-      this.size = 0;
+      this._size = 0;
     } else {
       let current = this.head;
       let i = 1;
 
       if (current) {
-        while (i !== this.size - 1) {
+        while (i !== this._size - 1) {
           if (current.next) {
             current = current.next;
           }
@@ -143,7 +144,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 
         this.tail = current;
         this.tail.next = null;
-        this.size--;
+        this._size--;
       }
     }
   }
@@ -162,5 +163,9 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
 
     return res;
+  }
+
+  get listSize() {
+    return this._size;
   }
 }

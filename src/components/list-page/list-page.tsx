@@ -20,8 +20,12 @@ export const ListPage: React.FC = () => {
   const [loader, setLoader] = useState<boolean>(false);
 
   const showCurrentResult = () => {
-    setResult(linkedList.current.toArray().map(item => { return item }));
-  }
+    setResult(
+      linkedList.current.toArray().map((item) => {
+        return item;
+      })
+    );
+  };
 
   const handleValueChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setValue(evt.target.value);
@@ -33,7 +37,7 @@ export const ListPage: React.FC = () => {
 
   const handleAddHeadClick = () => {
     linkedList.current.prepend(value);
-    
+
     setValue('');
     showCurrentResult();
   };
@@ -48,12 +52,12 @@ export const ListPage: React.FC = () => {
   const handleDeleteHeadClick = () => {
     linkedList.current.deleteHead();
     showCurrentResult();
-  }
+  };
 
   const handleDeleteTailClick = () => {
     linkedList.current.deleteTail();
     showCurrentResult();
-  }
+  };
 
   const handleAddByIndex = () => {
     linkedList.current.addByIndex(value, Number.parseInt(index));
@@ -61,14 +65,31 @@ export const ListPage: React.FC = () => {
     setValue('');
     setIndex('');
     showCurrentResult();
-  }
+  };
 
   const handleDeleteByIndex = () => {
     linkedList.current.deleteByIndex(Number.parseInt(index));
 
     setIndex('');
     showCurrentResult();
-  }
+  };
+
+  const isCorrectAddByIndex = (): boolean | undefined => {
+    return !(
+      index.length !== 0 &&
+      value.length !== 0 &&
+      Number.parseInt(index) > -1 &&
+      Number.parseInt(index) < linkedList.current.listSize + 1
+    );
+  };
+
+  const isCorrectDeleteByIndex = (): boolean | undefined => {
+    return !(
+      index.length !== 0 &&
+      Number.parseInt(index) > -1 &&
+      Number.parseInt(index) < linkedList.current.listSize
+    );
+  };
 
   useEffect(() => {
     DEFAULT_LIST.forEach((item) => {
@@ -136,7 +157,7 @@ export const ListPage: React.FC = () => {
             style={{ minWidth: '362px' }}
             onClick={handleAddByIndex}
             isLoader={loader}
-            disabled={index.length === 0 || value.length === 0}
+            disabled={isCorrectAddByIndex()}
           />
           <Button
             type={'button'}
@@ -144,7 +165,7 @@ export const ListPage: React.FC = () => {
             style={{ minWidth: '362px' }}
             onClick={handleDeleteByIndex}
             isLoader={loader}
-            disabled={index.length === 0 || result.length === 0}
+            disabled={isCorrectDeleteByIndex()}
           />
         </fieldset>
       </form>

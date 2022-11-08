@@ -20,13 +20,13 @@ interface ILinkedList<T> {
 }
 
 export class LinkedList<T> implements ILinkedList<T> {
-  private head: LinkedListNode<T> | null;
-  private tail: LinkedListNode<T> | null;
+  private _head: LinkedListNode<T> | null;
+  private _tail: LinkedListNode<T> | null;
   private _size: number;
 
   constructor() {
-    this.head = null;
-    this.tail = null;
+    this._head = null;
+    this._tail = null;
     this._size = 0;
   }
 
@@ -34,13 +34,13 @@ export class LinkedList<T> implements ILinkedList<T> {
     const newNode = new LinkedListNode(node);
 
     if (this._size === 0) {
-      this.head = newNode;
-      this.tail = newNode;
+      this._head = newNode;
+      this._tail = newNode;
       this._size++;
     } else {
-      if (this.head) {
-        newNode.next = this.head;
-        this.head = newNode;
+      if (this._head) {
+        newNode.next = this._head;
+        this._head = newNode;
         this._size++;
       }
     }
@@ -50,14 +50,14 @@ export class LinkedList<T> implements ILinkedList<T> {
     const newNode = new LinkedListNode(node);
 
     if (this._size === 0) {
-      this.head = newNode;
-      this.tail = newNode;
+      this._head = newNode;
+      this._tail = newNode;
       this._size++;
     } else {
-      if (this.tail) {
-        this.tail.next = newNode;
+      if (this._tail) {
+        this._tail.next = newNode;
       }
-      this.tail = newNode;
+      this._tail = newNode;
       this._size++;
     }
   }
@@ -67,18 +67,18 @@ export class LinkedList<T> implements ILinkedList<T> {
 
     if(index === 0) {
       if(this._size === 1) {
-        this.tail = this.head;
+        this._tail = this._head;
       }
       
-      newNode.next = this.head;
-      this.head = newNode;
+      newNode.next = this._head;
+      this._head = newNode;
       this._size++;
 
       return;
     }
 
-    let prev = this.head;
-    let current = this.head;
+    let prev = this._head;
+    let current = this._head;
     let i = 0;
 
     while (i !== index) {
@@ -100,15 +100,15 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   deleteByIndex(index: number) {
     if(this._size === 1 && index === 0) {
-      this.head = null;
-      this.tail = null;
+      this._head = null;
+      this._tail = null;
       this._size = 0;
 
       return;
     }
 
-    let prev = this.head;
-    let current = this.head;
+    let prev = this._head;
+    let current = this._head;
     let i = 0;
 
     while (i !== index) {
@@ -121,11 +121,11 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
 
     if (prev && current) {
-      if (current === this.head) {
-        this.head = this.head.next;
-      } else if (current === this.tail) {
+      if (current === this._head) {
+        this._head = this._head.next;
+      } else if (current === this._tail) {
         prev.next = null;
-        this.tail = prev;
+        this._tail = prev;
       }
       else {
         prev.next = current.next;
@@ -137,12 +137,12 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   deleteHead() {
     if (this._size < 2) {
-      this.head = null;
-      this.tail = null;
+      this._head = null;
+      this._tail = null;
       this._size = 0;
     } else {
-      if (this.head && this.head.next) {
-        this.head = this.head.next;
+      if (this._head && this._head.next) {
+        this._head = this._head.next;
         this._size--;
       }
     }
@@ -150,11 +150,11 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   deleteTail() {
     if (this._size === 1) {
-      this.head = null;
-      this.tail = null;
+      this._head = null;
+      this._tail = null;
       this._size = 0;
     } else {
-      let current = this.head;
+      let current = this._head;
       let i = 1;
 
       if (current) {
@@ -166,8 +166,8 @@ export class LinkedList<T> implements ILinkedList<T> {
           i++;
         }
 
-        this.tail = current;
-        this.tail.next = null;
+        this._tail = current;
+        this._tail.next = null;
         this._size--;
       }
     }
@@ -175,7 +175,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   toArray() {
     let res: Array<T> = [];
-    let current = this.head;
+    let current = this._head;
 
     if (current) {
       while (current.next) {

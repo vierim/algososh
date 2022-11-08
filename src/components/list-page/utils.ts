@@ -20,8 +20,8 @@ interface ILinkedList<T> {
 }
 
 export class LinkedList<T> implements ILinkedList<T> {
-  head: LinkedListNode<T> | null;
-  tail: LinkedListNode<T> | null;
+  private head: LinkedListNode<T> | null;
+  private tail: LinkedListNode<T> | null;
   private _size: number;
 
   constructor() {
@@ -63,51 +63,75 @@ export class LinkedList<T> implements ILinkedList<T> {
   }
 
   addByIndex(node: T, index: number) {
+    const newNode = new LinkedListNode(node);
+
+    if(index === 0) {
+      if(this._size === 1) {
+        this.tail = this.head;
+      }
+      
+      newNode.next = this.head;
+      this.head = newNode;
+      this._size++;
+
+      return;
+    }
+
     let prev = this.head;
     let current = this.head;
     let i = 0;
 
-    while (i < index) {
+    while (i !== index) {
       if (current && current.next) {
         prev = current;
         current = current.next;
       }
-      
+
       i++;
     }
 
-    const newNode = new LinkedListNode(
-      node,
-      current && current.next ? current.next : undefined
-    );
-
-    if(prev) {
+    if (prev) {
       prev.next = newNode;
     }
 
     newNode.next = current;
-    
     this._size++;
   }
 
   deleteByIndex(index: number) {
+    if(this._size === 1 && index === 0) {
+      this.head = null;
+      this.tail = null;
+      this._size = 0;
+
+      return;
+    }
+
     let prev = this.head;
     let current = this.head;
     let i = 0;
 
-    while (i < index) {
+    while (i !== index) {
       if (current && current.next) {
         prev = current;
         current = current.next;
       }
-      
+
       i++;
     }
 
-    if(prev && current) {
-      prev.next = current.next;
+    if (prev && current) {
+      if (current === this.head) {
+        this.head = this.head.next;
+      } else if (current === this.tail) {
+        prev.next = null;
+        this.tail = prev;
+      }
+      else {
+        prev.next = current.next;
+      }
     }
-    
+
     this._size--;
   }
 

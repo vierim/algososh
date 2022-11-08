@@ -10,6 +10,9 @@ import { Circle } from '../ui/circle/circle';
 import { ArrowIcon } from '../ui/icons/arrow-icon';
 
 import styles from './list.module.css';
+import { ElementStates } from '../../types/element-states';
+import { DELAY_IN_MS } from '../../constants/delays';
+import { setDelay } from '../../utils/utils';
 
 export const ListPage: React.FC = () => {
   const linkedList = useRef(new LinkedList());
@@ -18,6 +21,14 @@ export const ListPage: React.FC = () => {
   const [index, setIndex] = useState('');
   const [result, setResult] = useState<Array<unknown>>([]);
   const [loader, setLoader] = useState<boolean>(false);
+
+  const [currentElement, setCurrentElement] = useState('');
+  const [smallCircleIndex, setSmallCircleIndex] = useState(-1);
+  const [modifiedIndex, setModifiedIndex] = useState(-1);
+  const [changingIndex, setChangingIndex] = useState(-1);
+  const [smallCirclePosition, setSmallCirclePosition] = useState<
+    'top' | 'bottom' | undefined
+  >(undefined);
 
   const showCurrentResult = () => {
     setResult(
@@ -35,18 +46,42 @@ export const ListPage: React.FC = () => {
     setIndex(evt.target.value);
   };
 
-  const handleAddHeadClick = () => {
+  const handleAddHeadClick = async () => {
     linkedList.current.prepend(value);
 
+    setCurrentElement(value);
     setValue('');
+
+    setSmallCirclePosition('top');
+    setSmallCircleIndex(0);
+    await setDelay(DELAY_IN_MS);
+
+    setSmallCircleIndex(-1);
+    setModifiedIndex(0);
     showCurrentResult();
+    await setDelay(DELAY_IN_MS);
+
+    setModifiedIndex(-1);
+    setSmallCirclePosition(undefined);
   };
 
-  const handleAddTailClick = () => {
+  const handleAddTailClick = async () => {
     linkedList.current.append(value);
 
+    setCurrentElement(value);
     setValue('');
+
+    setSmallCirclePosition('top');
+    setSmallCircleIndex(linkedList.current.listSize - 2);
+    await setDelay(DELAY_IN_MS);
+
+    setSmallCircleIndex(-1);
+    setModifiedIndex(linkedList.current.listSize - 1);
     showCurrentResult();
+    await setDelay(DELAY_IN_MS);
+
+    setModifiedIndex(-1);
+    setSmallCirclePosition(undefined);
   };
 
   const handleDeleteHeadClick = () => {
@@ -178,7 +213,22 @@ export const ListPage: React.FC = () => {
                 <Circle
                   letter={`${item}`}
                   index={index}
-                  head={index === 0 ? 'head' : undefined}
+                  state={
+                    modifiedIndex === index
+                      ? ElementStates.Modified
+                      : ElementStates.Default
+                  }
+                  head={
+                    smallCircleIndex === index ? (
+                      <Circle
+                        letter={currentElement}
+                        state={ElementStates.Changing}
+                        isSmall
+                      />
+                    ) : index === 0 ? (
+                      'head'
+                    ) : undefined
+                  }
                   tail={index === result.length - 1 ? 'tail' : undefined}
                 />
                 {index !== result.length - 1 && <ArrowIcon />}

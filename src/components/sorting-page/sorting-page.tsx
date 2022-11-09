@@ -20,7 +20,7 @@ export const SortingPage: React.FC = () => {
   const [result, setResult] = useState<TSortingResult>([]);
   const [solution, setSolution] = useState<TSortingResult[]>([]);
   const [step, setStep] = useState(-1);
-  const [runnig, setRunning] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const method = e.target.value;
@@ -68,7 +68,7 @@ export const SortingPage: React.FC = () => {
   };
 
   const startVisualization = () => {
-    setRunning(true);
+    setLoader(true);
     setStep(0);
   };
 
@@ -79,7 +79,7 @@ export const SortingPage: React.FC = () => {
       }
   
       if (step >= solution.length) {
-        setRunning(false);
+        setLoader(false);
         return;
       }
   
@@ -106,7 +106,7 @@ export const SortingPage: React.FC = () => {
             value={'choice'}
             checked={method === 'choice'}
             label={'Выбор'}
-            disabled={runnig}
+            disabled={loader}
           />
           <RadioInput
             name={'kind'}
@@ -114,7 +114,7 @@ export const SortingPage: React.FC = () => {
             value={'bubble'}
             checked={method === 'bubble'}
             label={'Пузырек'}
-            disabled={runnig}
+            disabled={loader}
           />
         </fieldset>
         <fieldset className={styles.combination}>
@@ -125,8 +125,8 @@ export const SortingPage: React.FC = () => {
             value={'ascending'}
             style={{ minWidth: '205px' }}
             onClick={handleAscendingClick}
-            isLoader={runnig && direction === Direction.Ascending}
-            disabled={runnig && direction === Direction.Descending}
+            isLoader={loader && direction === Direction.Ascending}
+            disabled={loader && direction === Direction.Descending}
           />
           <Button
             type={'submit'}
@@ -135,8 +135,8 @@ export const SortingPage: React.FC = () => {
             value={'descending'}
             style={{ minWidth: '205px' }}
             onClick={handleDescendingClick}
-            isLoader={runnig && direction === Direction.Descending}
-            disabled={runnig && direction === Direction.Ascending}
+            isLoader={loader && direction === Direction.Descending}
+            disabled={loader && direction === Direction.Ascending}
           />
         </fieldset>
         <Button
@@ -144,7 +144,7 @@ export const SortingPage: React.FC = () => {
           text={'Новый массив'}
           onClick={handleSetNewArray}
           style={{ minWidth: '205px' }}
-          disabled={runnig}
+          disabled={loader}
         />
       </form>
 

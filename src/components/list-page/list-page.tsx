@@ -8,6 +8,7 @@ import { setDelay } from '../../utils/utils';
 
 import { ActionStates } from '../../types/action-states';
 import { ElementStates } from '../../types/element-states';
+import { Positions } from '../../types/positions';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -31,7 +32,7 @@ export const ListPage: React.FC = () => {
   const [modifiedIndex, setModifiedIndex] = useState(-1);
   const [changingIndex, setChangingIndex] = useState(-1);
   const [smallCirclePosition, setSmallCirclePosition] = useState<
-    'top' | 'bottom' | undefined
+    Positions | undefined
   >(undefined);
 
   const showCurrentResult = () => {
@@ -60,7 +61,7 @@ export const ListPage: React.FC = () => {
       setCurrentElement(value);
       setValue('');
 
-      setSmallCirclePosition('top');
+      setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(0);
       await setDelay(DELAY_IN_MS);
 
@@ -94,7 +95,7 @@ export const ListPage: React.FC = () => {
       setCurrentElement(value);
       setValue('');
 
-      setSmallCirclePosition('top');
+      setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(linkedList.current.listSize - 2);
       await setDelay(DELAY_IN_MS);
 
@@ -122,7 +123,7 @@ export const ListPage: React.FC = () => {
     setLoader(true);
     setAction(ActionStates.DeleteFromHead);
 
-    setSmallCirclePosition('bottom');
+    setSmallCirclePosition(Positions.Bottom);
     setSmallCircleIndex(0);
     setCurrentElement(result[0] as string);
     setResult((prev) => ['', ...prev.slice(1)]);
@@ -142,7 +143,7 @@ export const ListPage: React.FC = () => {
     setLoader(true);
     setAction(ActionStates.DeleteFromTail);
 
-    setSmallCirclePosition('bottom');
+    setSmallCirclePosition(Positions.Bottom);
     setSmallCircleIndex(result.length - 1);
     setCurrentElement(result[result.length - 1] as string);
     setResult((prev) => [...prev.slice(0, result.length - 1), '']);
@@ -170,7 +171,7 @@ export const ListPage: React.FC = () => {
       currentIndex++;
     }
 
-    setSmallCirclePosition('top');
+    setSmallCirclePosition(Positions.Top);
     setSmallCircleIndex(Number.parseInt(index));
     setCurrentElement(value);
     await setDelay(DELAY_IN_MS);
@@ -206,7 +207,7 @@ export const ListPage: React.FC = () => {
       currentIndex++;
     }
 
-    setSmallCirclePosition('bottom');
+    setSmallCirclePosition(Positions.Bottom);
     setSmallCircleIndex(Number.parseInt(index));
 
     setCurrentElement(result[Number.parseInt(index)] as string);
@@ -362,7 +363,7 @@ export const ListPage: React.FC = () => {
                   }
                   head={
                     smallCircleIndex === index &&
-                    smallCirclePosition === 'top' ? (
+                    smallCirclePosition === Positions.Top ? (
                       <Circle
                         letter={currentElement}
                         state={ElementStates.Changing}
@@ -374,7 +375,7 @@ export const ListPage: React.FC = () => {
                   }
                   tail={
                     smallCircleIndex === index &&
-                    smallCirclePosition === 'bottom' ? (
+                    smallCirclePosition === Positions.Bottom ? (
                       <Circle
                         letter={currentElement}
                         state={ElementStates.Changing}

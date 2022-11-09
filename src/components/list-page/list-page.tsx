@@ -49,39 +49,57 @@ export const ListPage: React.FC = () => {
   const handleAddHeadClick = async () => {
     linkedList.current.prepend(value);
 
-    setCurrentElement(value);
-    setValue('');
+    if (result.length > 0) {
+      setCurrentElement(value);
+      setValue('');
 
-    setSmallCirclePosition('top');
-    setSmallCircleIndex(0);
-    await setDelay(DELAY_IN_MS);
+      setSmallCirclePosition('top');
+      setSmallCircleIndex(0);
+      await setDelay(DELAY_IN_MS);
 
-    setSmallCircleIndex(-1);
-    setModifiedIndex(0);
-    showCurrentResult();
-    await setDelay(DELAY_IN_MS);
+      setSmallCircleIndex(-1);
+      setModifiedIndex(0);
+      showCurrentResult();
+      await setDelay(DELAY_IN_MS);
 
-    setModifiedIndex(-1);
-    setSmallCirclePosition(undefined);
+      setModifiedIndex(-1);
+      setSmallCirclePosition(undefined);
+    } else {
+      setValue('');
+      showCurrentResult();
+      setModifiedIndex(0);
+
+      await setDelay(DELAY_IN_MS);
+      setModifiedIndex(-1);
+    }
   };
 
   const handleAddTailClick = async () => {
     linkedList.current.append(value);
 
-    setCurrentElement(value);
-    setValue('');
+    if (result.length > 0) {
+      setCurrentElement(value);
+      setValue('');
 
-    setSmallCirclePosition('top');
-    setSmallCircleIndex(linkedList.current.listSize - 2);
-    await setDelay(DELAY_IN_MS);
+      setSmallCirclePosition('top');
+      setSmallCircleIndex(linkedList.current.listSize - 2);
+      await setDelay(DELAY_IN_MS);
 
-    setSmallCircleIndex(-1);
-    setModifiedIndex(linkedList.current.listSize - 1);
-    showCurrentResult();
-    await setDelay(DELAY_IN_MS);
+      setSmallCircleIndex(-1);
+      setModifiedIndex(linkedList.current.listSize - 1);
+      showCurrentResult();
+      await setDelay(DELAY_IN_MS);
 
-    setModifiedIndex(-1);
-    setSmallCirclePosition(undefined);
+      setModifiedIndex(-1);
+      setSmallCirclePosition(undefined);
+    } else {
+      setValue('');
+      showCurrentResult();
+      setModifiedIndex(0);
+
+      await setDelay(DELAY_IN_MS);
+      setModifiedIndex(-1);
+    }
   };
 
   const handleDeleteHeadClick = async () => {

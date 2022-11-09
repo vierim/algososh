@@ -130,18 +130,40 @@ export const ListPage: React.FC = () => {
     showCurrentResult();
   };
 
-  const handleAddByIndex = () => {
+  const handleAddByIndex = async () => {
+    let currentIndex = 0;
+
+    while (currentIndex <= Number.parseInt(index)) {
+      setChangingIndex(currentIndex);
+      await setDelay(DELAY_IN_MS);
+      currentIndex++;
+    }
+
+    setSmallCirclePosition('top');
+    setSmallCircleIndex(Number.parseInt(index));
+    setCurrentElement(value);
+    await setDelay(DELAY_IN_MS);
+
     linkedList.current.addByIndex(value, Number.parseInt(index));
+
+    setSmallCircleIndex(-1);
+    setModifiedIndex(Number.parseInt(index));
+    showCurrentResult();
+
+    await setDelay(DELAY_IN_MS);
+
+    setModifiedIndex(-1);
+    setChangingIndex(-1);
+    setSmallCirclePosition(undefined);
 
     setValue('');
     setIndex('');
-    showCurrentResult();
   };
 
   const handleDeleteByIndex = async () => {
     let currentIndex = 0;
 
-    while(currentIndex <= Number.parseInt(index)) {
+    while (currentIndex <= Number.parseInt(index)) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;

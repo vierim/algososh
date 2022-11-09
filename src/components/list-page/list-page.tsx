@@ -138,9 +138,31 @@ export const ListPage: React.FC = () => {
     showCurrentResult();
   };
 
-  const handleDeleteByIndex = () => {
-    linkedList.current.deleteByIndex(Number.parseInt(index));
+  const handleDeleteByIndex = async () => {
+    let currentIndex = 0;
 
+    while(currentIndex <= Number.parseInt(index)) {
+      setChangingIndex(currentIndex);
+      await setDelay(DELAY_IN_MS);
+      currentIndex++;
+    }
+
+    setSmallCirclePosition('bottom');
+    setSmallCircleIndex(Number.parseInt(index));
+
+    setCurrentElement(result[Number.parseInt(index)] as string);
+    setResult((prev) => [
+      ...prev.slice(0, Number.parseInt(index)),
+      '',
+      ...prev.slice(Number.parseInt(index) + 1),
+    ]);
+    await setDelay(DELAY_IN_MS);
+
+    setSmallCircleIndex(-1);
+    setChangingIndex(-1);
+    setSmallCirclePosition(undefined);
+
+    linkedList.current.deleteByIndex(Number.parseInt(index));
     setIndex('');
     showCurrentResult();
   };
@@ -252,6 +274,8 @@ export const ListPage: React.FC = () => {
                   state={
                     modifiedIndex === index
                       ? ElementStates.Modified
+                      : changingIndex >= index
+                      ? ElementStates.Changing
                       : ElementStates.Default
                   }
                   head={
@@ -279,7 +303,11 @@ export const ListPage: React.FC = () => {
                     ) : undefined
                   }
                 />
-                {index !== result.length - 1 && <ArrowIcon />}
+                {index !== result.length - 1 && (
+                  <ArrowIcon
+                    fill={changingIndex - 1 >= index ? '#d252e1' : undefined}
+                  />
+                )}
               </li>
             );
           })}

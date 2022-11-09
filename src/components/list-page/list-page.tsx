@@ -84,12 +84,30 @@ export const ListPage: React.FC = () => {
     setSmallCirclePosition(undefined);
   };
 
-  const handleDeleteHeadClick = () => {
+  const handleDeleteHeadClick = async () => {
+    setSmallCirclePosition('bottom');
+    setSmallCircleIndex(0);
+    setCurrentElement(result[0] as string);
+    setResult((prev) => ['', ...prev.slice(1)]);
+    await setDelay(DELAY_IN_MS);
+
+    setSmallCircleIndex(-1);
+    setSmallCirclePosition(undefined);
+
     linkedList.current.deleteHead();
     showCurrentResult();
   };
 
-  const handleDeleteTailClick = () => {
+  const handleDeleteTailClick = async () => {
+    setSmallCirclePosition('bottom');
+    setSmallCircleIndex(result.length - 1);
+    setCurrentElement(result[result.length - 1] as string);
+    setResult((prev) => [...prev.slice(0, result.length - 1), '']);
+    await setDelay(DELAY_IN_MS);
+
+    setSmallCircleIndex(-1);
+    setSmallCirclePosition(undefined);
+
     linkedList.current.deleteTail();
     showCurrentResult();
   };
@@ -219,7 +237,8 @@ export const ListPage: React.FC = () => {
                       : ElementStates.Default
                   }
                   head={
-                    smallCircleIndex === index ? (
+                    smallCircleIndex === index &&
+                    smallCirclePosition === 'top' ? (
                       <Circle
                         letter={currentElement}
                         state={ElementStates.Changing}
@@ -229,7 +248,18 @@ export const ListPage: React.FC = () => {
                       'head'
                     ) : undefined
                   }
-                  tail={index === result.length - 1 ? 'tail' : undefined}
+                  tail={
+                    smallCircleIndex === index &&
+                    smallCirclePosition === 'bottom' ? (
+                      <Circle
+                        letter={currentElement}
+                        state={ElementStates.Changing}
+                        isSmall
+                      />
+                    ) : index === result.length - 1 ? (
+                      'tail'
+                    ) : undefined
+                  }
                 />
                 {index !== result.length - 1 && <ArrowIcon />}
               </li>

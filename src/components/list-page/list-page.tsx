@@ -21,6 +21,15 @@ export const ListPage: React.FC = () => {
   const [index, setIndex] = useState('');
   const [result, setResult] = useState<Array<unknown>>([]);
   const [loader, setLoader] = useState<boolean>(false);
+  const [action, setAction] = useState<
+    | 'AddToHead'
+    | 'AddToTail'
+    | 'DeleteFromHead'
+    | 'DeleteFromTail'
+    | 'AddByIndex'
+    | 'DeleteByIndex'
+    | undefined
+  >(undefined);
 
   const [currentElement, setCurrentElement] = useState('');
   const [smallCircleIndex, setSmallCircleIndex] = useState(-1);
@@ -47,6 +56,9 @@ export const ListPage: React.FC = () => {
   };
 
   const handleAddHeadClick = async () => {
+    setLoader(true);
+    setAction('AddToHead');
+
     linkedList.current.prepend(value);
 
     if (result.length > 0) {
@@ -72,9 +84,15 @@ export const ListPage: React.FC = () => {
       await setDelay(DELAY_IN_MS);
       setModifiedIndex(-1);
     }
+
+    setLoader(false);
+    setAction(undefined);
   };
 
   const handleAddTailClick = async () => {
+    setLoader(true);
+    setAction('AddToTail');
+
     linkedList.current.append(value);
 
     if (result.length > 0) {
@@ -100,9 +118,15 @@ export const ListPage: React.FC = () => {
       await setDelay(DELAY_IN_MS);
       setModifiedIndex(-1);
     }
+
+    setLoader(false);
+    setAction(undefined);
   };
 
   const handleDeleteHeadClick = async () => {
+    setLoader(true);
+    setAction('DeleteFromHead');
+
     setSmallCirclePosition('bottom');
     setSmallCircleIndex(0);
     setCurrentElement(result[0] as string);
@@ -114,9 +138,15 @@ export const ListPage: React.FC = () => {
 
     linkedList.current.deleteHead();
     showCurrentResult();
+
+    setLoader(false);
+    setAction(undefined);
   };
 
   const handleDeleteTailClick = async () => {
+    setLoader(true);
+    setAction('DeleteFromTail');
+
     setSmallCirclePosition('bottom');
     setSmallCircleIndex(result.length - 1);
     setCurrentElement(result[result.length - 1] as string);
@@ -128,9 +158,15 @@ export const ListPage: React.FC = () => {
 
     linkedList.current.deleteTail();
     showCurrentResult();
+
+    setLoader(false);
+    setAction(undefined);
   };
 
   const handleAddByIndex = async () => {
+    setLoader(true);
+    setAction('AddByIndex');
+
     let currentIndex = 0;
 
     while (currentIndex <= Number.parseInt(index)) {
@@ -158,9 +194,15 @@ export const ListPage: React.FC = () => {
 
     setValue('');
     setIndex('');
+
+    setLoader(false);
+    setAction(undefined);
   };
 
   const handleDeleteByIndex = async () => {
+    setLoader(true);
+    setAction('DeleteByIndex');
+
     let currentIndex = 0;
 
     while (currentIndex <= Number.parseInt(index)) {
@@ -187,6 +229,9 @@ export const ListPage: React.FC = () => {
     linkedList.current.deleteByIndex(Number.parseInt(index));
     setIndex('');
     showCurrentResult();
+
+    setLoader(false);
+    setAction(undefined);
   };
 
   const isCorrectAddByIndex = (): boolean | undefined => {
@@ -225,38 +270,43 @@ export const ListPage: React.FC = () => {
             isLimitText={true}
             value={value}
             onChange={handleValueChange}
+            disabled={loader}
           />
           <Button
             type={'button'}
             text={'Добавить в head'}
             style={{ minWidth: '175px' }}
             onClick={handleAddHeadClick}
-            isLoader={loader}
-            disabled={value.length === 0}
+            isLoader={loader && action === 'AddToHead'}
+            disabled={(loader && action !== 'AddToHead') || value.length === 0}
           />
           <Button
             type={'button'}
             text={'Добавить в tail'}
             style={{ minWidth: '175px' }}
             onClick={handleAddTailClick}
-            isLoader={loader}
-            disabled={value.length === 0}
+            isLoader={loader && action === 'AddToTail'}
+            disabled={(loader && action !== 'AddToTail') || value.length === 0}
           />
           <Button
             type={'button'}
             text={'Удалить из head'}
             style={{ minWidth: '175px' }}
             onClick={handleDeleteHeadClick}
-            isLoader={loader}
-            disabled={result.length === 0}
+            isLoader={loader && action === 'DeleteFromHead'}
+            disabled={
+              (loader && action !== 'DeleteFromHead') || result.length === 0
+            }
           />
           <Button
             type={'button'}
             text={'Удалить из tail'}
             style={{ minWidth: '175px' }}
             onClick={handleDeleteTailClick}
-            isLoader={loader}
-            disabled={result.length === 0}
+            isLoader={loader && action === 'DeleteFromTail'}
+            disabled={
+              (loader && action !== 'DeleteFromTail') || result.length === 0
+            }
           />
         </fieldset>
         <fieldset className={styles.form__group}>
@@ -265,22 +315,27 @@ export const ListPage: React.FC = () => {
             placeholder={'Введите индекс'}
             value={index}
             onChange={handleIndexChange}
+            disabled={loader}
           />
           <Button
             type={'button'}
             text={'Добавить по индексу'}
             style={{ minWidth: '362px' }}
             onClick={handleAddByIndex}
-            isLoader={loader}
-            disabled={isCorrectAddByIndex()}
+            isLoader={loader && action === 'AddByIndex'}
+            disabled={
+              (loader && action !== 'AddByIndex') || isCorrectAddByIndex()
+            }
           />
           <Button
             type={'button'}
             text={'Удалить по индексу'}
             style={{ minWidth: '362px' }}
             onClick={handleDeleteByIndex}
-            isLoader={loader}
-            disabled={isCorrectDeleteByIndex()}
+            isLoader={loader && action === 'DeleteByIndex'}
+            disabled={
+              (loader && action !== 'DeleteByIndex') || isCorrectDeleteByIndex()
+            }
           />
         </fieldset>
       </form>

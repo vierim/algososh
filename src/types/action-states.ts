@@ -1,4 +1,5 @@
 export enum ActionStates {
+  Waiting = '',
   AddToHead = 'AddToHead',
   AddToTail = 'AddToTail',
   DeleteFromHead = 'DeleteFromHead',

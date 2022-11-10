@@ -9,6 +9,7 @@ class LinkedListNode<T> {
 }
 
 interface ILinkedList<T> {
+  _clearList: () => void;
   prepend: (node: T) => void;
   append: (node: T) => void;
   addByIndex: (node: T, index: number) => void;
@@ -37,6 +38,12 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   get listSize() {
     return this._size;
+  }
+
+  _clearList() {
+    this._head = null;
+    this._tail = null;
+    this._size = 0;
   }
 
   prepend(node: T) {
@@ -109,10 +116,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   deleteByIndex(index: number) {
     if (this._size === 1 && index === 0) {
-      this._head = null;
-      this._tail = null;
-      this._size = 0;
-
+      this._clearList();
       return;
     }
 
@@ -145,9 +149,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   deleteHead() {
     if (this._size < 2) {
-      this._head = null;
-      this._tail = null;
-      this._size = 0;
+      this._clearList();
     } else {
       if (this._head && this._head.next) {
         this._head = this._head.next;
@@ -158,9 +160,7 @@ export class LinkedList<T> implements ILinkedList<T> {
 
   deleteTail() {
     if (this._size === 1) {
-      this._head = null;
-      this._tail = null;
-      this._size = 0;
+      this._clearList();
     } else {
       let current = this._head;
       let i = 1;

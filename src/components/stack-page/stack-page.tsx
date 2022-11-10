@@ -17,13 +17,13 @@ import { Circle } from '../ui/circle/circle';
 import styles from './stack.module.css';
 
 export const StackPage: React.FC = () => {
+  const stackRef = useRef(new Stack());
+
   const [value, setValue] = useState('');
   const [result, setResult] = useState<TStackResult>([]);
   const [action, setAction] = useState<Actions>(Actions.Waiting);
   const [instant, setInstant] = useState<number>(-1);
   const [loader, setLoader] = useState<boolean>(false);
-
-  const stackRef = useRef(new Stack());
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setValue(evt.target.value);
@@ -77,13 +77,13 @@ export const StackPage: React.FC = () => {
   };
 
   const showDataFromStack = () => {
-    const stack = stackRef.current.getAllItems();
+    const stack = stackRef.current.toArray();
 
     if (stack && stack.length > 0) {
       setResult(
         stack.map((item, index) => {
           return {
-            value: item,
+            value: String(item),
             state:
               index === instant
                 ? ElementStates.Changing
@@ -111,12 +111,12 @@ export const StackPage: React.FC = () => {
 
   useEffect(() => {
     if (action === Actions.AddToTail) {
-      setInstant(stackRef.current.getLastIndex());
+      setInstant(stackRef.current.lastIndex);
     } else if (action === Actions.DeleteFromTail) {
-      if (stackRef.current.getSize() > 0) {
-        setInstant(stackRef.current.getLastIndex() + 1);
+      if (stackRef.current.size > 0) {
+        setInstant(stackRef.current.lastIndex + 1);
       } else {
-        setInstant(stackRef.current.getLastIndex());
+        setInstant(stackRef.current.lastIndex);
       }
     }
 

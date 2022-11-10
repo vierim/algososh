@@ -1,40 +1,42 @@
-interface IStack {
-  push: (item: string) => void;
+interface IStack<T> {
+  push: (item: T) => void;
   pop: () => void;
-  peak: () => string | null;
+  peak: () => T | null;
   clear: () => void;
-  getSize: () => number;
-  getLastIndex: () => number;
-  getAllItems: () => string[] | boolean;
+  toArray: () => T[];
+
+  size: number;
+  lastIndex: number;
 }
 
-export class Stack implements IStack {
-  private container: string[] = [];
+export class Stack<T> implements IStack<T> {
+  private _container: T[] = [];
 
-  push = (item: string) => {
-    this.container.push(item);
+  push = (item: T) => {
+    this._container.push(item);
   };
 
   pop = () => {
-    this.container.pop();
+    this._container.pop();
   };
 
   peak = () => {
-    if (this.getSize() > 0) {
-      return this.container[this.getSize() - 1];
-    }
-    return null;
+    return this.size > 0 ? this._container[this.size - 1] : null;
   };
 
   clear = () => {
-    if (this.getSize() > 0) {
-      this.container = [];
+    if (this.size > 0) {
+      this._container = [];
     }
   };
 
-  getSize = () => this.container.length;
+  toArray = () => this._container;
 
-  getLastIndex = () => (this.getSize() > 0 ? this.getSize() - 1 : 0);
+  get size() {
+    return this._container.length;
+  }
 
-  getAllItems = () => (this.container ? this.container : false);
+  get lastIndex() {
+    return this.size > 0 ? this.size - 1 : 0;
+  }
 }

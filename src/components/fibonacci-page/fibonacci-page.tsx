@@ -14,9 +14,9 @@ export const FibonacciPage: FC = () => {
   const fibonacciNumbers = useRef<number[]>([]);
   const timerId = useRef<NodeJS.Timeout>();
 
-  const [value, setValue] = useState(0);
-  const [loader, setLoader] = useState(false);
-  const [step, setStep] = useState(0);
+  const [value, setValue] = useState<number>(0);
+  const [loader, setLoader] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(0);
 
   const displayAlgorithm = () => {
     timerId.current = setInterval(() => {
@@ -34,17 +34,17 @@ export const FibonacciPage: FC = () => {
   };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number(evt.target.value);
+    const val = Number.parseInt(evt.target.value);
 
     if (val >= 0 && val <= 19) {
       setValue(val);
     }
   };
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleClick = (evt: React.MouseEvent) => {
+    evt.preventDefault();
 
-    fibonacciNumbers.current = getFibonacciNumbers(Number(value));
+    fibonacciNumbers.current = getFibonacciNumbers(value);
     setStep(0);
     setLoader(true);
 

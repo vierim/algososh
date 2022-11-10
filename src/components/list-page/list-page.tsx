@@ -125,7 +125,7 @@ export const ListPage: React.FC = () => {
 
     setSmallCirclePosition(Positions.Bottom);
     setSmallCircleIndex(0);
-    setCurrentElement(result[0] as string);
+    setCurrentElement(String(result[0]));
     setResult((prev) => ['', ...prev.slice(1)]);
     await setDelay(DELAY_IN_MS);
 
@@ -145,7 +145,7 @@ export const ListPage: React.FC = () => {
 
     setSmallCirclePosition(Positions.Bottom);
     setSmallCircleIndex(result.length - 1);
-    setCurrentElement(result[result.length - 1] as string);
+    setCurrentElement(String(result[result.length - 1]));
     setResult((prev) => [...prev.slice(0, result.length - 1), '']);
     await setDelay(DELAY_IN_MS);
 
@@ -210,7 +210,7 @@ export const ListPage: React.FC = () => {
     setSmallCirclePosition(Positions.Bottom);
     setSmallCircleIndex(Number.parseInt(index));
 
-    setCurrentElement(result[Number.parseInt(index)] as string);
+    setCurrentElement(String(result[Number.parseInt(index)]));
     setResult((prev) => [
       ...prev.slice(0, Number.parseInt(index)),
       '',

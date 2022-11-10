@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { FC, useState, useRef } from 'react';
 
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-import { Queue } from './utils';
+import { QUEUE_LEN } from '../../constants/queue';
 
-import { Actions } from '../../types/actions';
+import { Queue } from './utils';
+import { setDelay } from '../../utils/utils';
+
+import { ActionStates as Actions } from '../../types/action-states';
 import { ElementStates } from '../../types/element-states';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
@@ -13,83 +16,79 @@ import { Circle } from '../ui/circle/circle';
 
 import styles from './queue.module.css';
 
-const QUEUE_LEN = 7;
+export const QueuePage: FC = () => {
+  const queue = useRef(new Queue(QUEUE_LEN));
 
-export const QueuePage: React.FC = () => {
-  const [value, setValue] = useState('');
-  const [result, setResult] = useState<Array<string | null>>(
+  const [value, setValue] = useState<string>('');
+  const [result, setResult] = useState<(string | null)[]>(
     new Array(QUEUE_LEN).fill(null)
   );
   const [action, setAction] = useState<Actions>(Actions.Waiting);
   const [instant, setInstant] = useState<number>(-1);
   const [loader, setLoader] = useState<boolean>(false);
 
-  const queueRef = useRef(new Queue(QUEUE_LEN));
+  const showDataFromQueue = () => {
+    setResult(
+      queue.current.toArray().map((item) => (item !== null ? String(item) : ''))
+    );
+  };
+
+  const showIncreaseQueue = async () => {
+    const currentValue = value;
+    setValue('');
+
+    setInstant(
+      queue.current.isEmpty
+        ? queue.current.tailPosition
+        : queue.current.tailPosition + 1
+    );
+    await setDelay(SHORT_DELAY_IN_MS);
+
+    queue.current.insert(currentValue);
+    showDataFromQueue();
+    await setDelay(SHORT_DELAY_IN_MS);
+
+    setInstant(-1);
+    setLoader(false);
+    setAction(Actions.Waiting);
+  };
+
+  const showDecreaseQueue = async () => {
+    setInstant(queue.current.headPosition);
+    await setDelay(SHORT_DELAY_IN_MS);
+
+    queue.current.remove();
+    showDataFromQueue();
+    setInstant(queue.current.headPosition);
+    await setDelay(SHORT_DELAY_IN_MS);
+
+    setInstant(-1);
+    setLoader(false);
+    setAction(Actions.Waiting);
+  };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setValue(evt.target.value);
   };
 
-  const handleAddClick = () => setAction(Actions.Push);
-  const handleRemoveClick = () => setAction(Actions.Pop);
+  const handleAddClick = () => {
+    setLoader(true);
+    setAction(Actions.AddToTail);
+
+    showIncreaseQueue();
+  };
+
+  const handleRemoveClick = () => {
+    setLoader(true);
+    setAction(Actions.DeleteFromHead);
+
+    showDecreaseQueue();
+  };
 
   const handleCleanClick = () => {
-    queueRef.current.clear();
+    queue.current.clear();
     showDataFromQueue();
   };
-
-  const showIncreaseQueue = () => {
-    window.setTimeout(() => {
-      queueRef.current.insert(value);
-      setValue('');
-      showDataFromQueue();
-      setAction(Actions.Waiting);
-
-      window.setTimeout(() => setInstant(-1), SHORT_DELAY_IN_MS);
-    }, SHORT_DELAY_IN_MS);
-  };
-
-  const showDecreaseStack = () => {
-    window.setTimeout(() => {
-      queueRef.current.remove();
-      showDataFromQueue();
-      setAction(Actions.Waiting);
-
-      setInstant(-1);
-    }, SHORT_DELAY_IN_MS);
-  };
-
-  const showDataFromQueue = () => {
-    const actualQueue = queueRef.current.getAllItems().map((item) => item);
-    setResult(actualQueue);
-  };
-
-  useEffect(() => {
-    if (action === Actions.Push) {
-      showIncreaseQueue();
-    } else if (action === Actions.Pop) {
-      showDecreaseStack();
-    } else {
-      showDataFromQueue();
-      setLoader(false);
-    }
-
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instant]);
-
-  useEffect(() => {
-    if (action === Actions.Push) {
-      setInstant(
-        queueRef.current.isEmpty()
-          ? queueRef.current.getTailPosition()
-          : queueRef.current.getTailPosition() + 1
-      );
-    } else if (action === Actions.Pop) {
-      setInstant(queueRef.current.getHeadPosition());
-    }
-
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [action]);
 
   return (
     <SolutionLayout title="Очередь">
@@ -101,20 +100,28 @@ export const QueuePage: React.FC = () => {
             isLimitText={true}
             value={value}
             onChange={handleChange}
+            disabled={loader}
           />
           <Button
             type={'button'}
             text={'Добавить'}
             onClick={handleAddClick}
-            isLoader={loader}
-            disabled={!loader && value.length === 0}
+            isLoader={loader && action === Actions.AddToTail}
+            disabled={
+              (loader && action !== Actions.AddToTail) ||
+              value.length === 0 ||
+              queue.current.isFull
+            }
           />
           <Button
             type={'button'}
             text={'Удалить'}
             onClick={handleRemoveClick}
-            isLoader={loader}
-            disabled={queueRef.current.isEmpty()}
+            isLoader={loader && action === Actions.DeleteFromHead}
+            disabled={
+              (loader && action !== Actions.DeleteFromHead) ||
+              queue.current.isEmpty
+            }
           />
         </fieldset>
         <Button
@@ -122,8 +129,7 @@ export const QueuePage: React.FC = () => {
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={
-            result.every((item) => item === null) &&
-            queueRef.current.getTailPosition() !== queueRef.current.getSize()
+            queue.current.tailPosition === 0 && queue.current.length === 0
           }
         />
       </form>
@@ -134,17 +140,17 @@ export const QueuePage: React.FC = () => {
             let isHead: boolean;
             let isTail: boolean;
 
-            let isEmpty = queueRef.current.isEmpty();
+            let isEmpty = queue.current.isEmpty;
             let nullablePosition =
-              queueRef.current.getHeadPosition() === 0 &&
-              queueRef.current.getTailPosition() === 0;
+              queue.current.headPosition === 0 &&
+              queue.current.tailPosition === 0;
 
             if (isEmpty && nullablePosition) {
               isHead = false;
               isTail = false;
             } else {
-              isHead = index === queueRef.current.getHeadPosition();
-              isTail = index === queueRef.current.getTailPosition();
+              isHead = index === queue.current.headPosition;
+              isTail = index === queue.current.tailPosition;
             }
 
             return (

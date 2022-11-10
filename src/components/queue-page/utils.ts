@@ -1,78 +1,97 @@
-interface IQueue {
-  insert: (item: string) => void;
+interface IQueue<T> {
+  insert: (item: T) => void;
   remove: () => void;
-  peak: () => string | null;
+  peak: () => T | null;
   clear: () => void;
-  isEmpty: () => boolean;
-  isFull: () => boolean;
-  getHeadPosition: () => number;
-  getTailPosition: () => number;
-  getSize: () => number;
-  getAllItems: () => Array<string | null>;
+  toArray: () => (T | null)[];
+
+  isEmpty: boolean;
+  isFull: boolean;
+
+  headPosition: number;
+  tailPosition: number;
+  size: number;
+  length: number;
 }
 
-export class Queue implements IQueue {
-  private container: Array<string | null> = [];
-  private head = 0;
-  private tail = 0;
+export class Queue<T> implements IQueue<T> {
+  private _container: (T | null)[] = [];
+  private _head = 0;
+  private _tail = 0;
 
-  private readonly size: number = 0;
-  private length = 0;
+  private readonly _size: number = 0;
+  private _length = 0;
 
   constructor(size: number) {
-    this.size = size;
-    this.container = Array(size).fill(null);
+    this._size = size;
+    this._container = Array(size).fill(null);
   }
 
-  insert = (item: string) => {
-    if (this.isFull()) {
+  insert = (item: T) => {
+    if (this.isFull) {
       throw new Error('Maximum length exceeded');
     }
 
-    if (!this.isEmpty()) {
-      this.tail++;
+    if (!this.isEmpty) {
+      this._tail++;
     }
 
-    this.container[this.tail] = item;
-    this.length++;
+    this._container[this._tail] = item;
+    this._length++;
   };
 
   remove = () => {
-    if (this.isEmpty()) {
+    if (this.isEmpty) {
       throw new Error('No elements in the queue');
     }
 
-    this.container[this.head] = null;
-    this.length--;
+    this._container[this._head] = null;
+    this._length--;
 
-    if (this.head !== this.size - 1) {
-      if (this.head !== this.tail) {
-        this.head++;
+    if (this._head !== this._size - 1) {
+      if (this._head !== this._tail) {
+        this._head++;
       }
     } else {
-      this.tail++;
+      this._tail++;
     }
   };
 
-  peak = () => this.container[this.head];
+  peak = () => this._container[this._head];
 
   clear = () => {
-    this.container = Array(this.size).fill(null);
+    this._container = Array(this._size).fill(null);
 
-    this.head = 0;
-    this.tail = 0;
-    this.length = 0;
+    this._head = 0;
+    this._tail = 0;
+    this._length = 0;
   };
 
-  isEmpty = () => this.length === 0;
+  get isEmpty() {
+    return this._length === 0;
+  };
 
-  isFull = () => this.tail >= this.size - 1;
+  get isFull() {
+    return this._tail >= this._size - 1;
+  };
 
-  getHeadPosition = () => this.head;
+  get headPosition() {
+    return this._head;
+  };
 
-  getTailPosition = () => this.tail;
+  get tailPosition() {
+    return this._tail;
+  };
 
-  getSize = () => this.size;
+  get size() {
+    return this._size;
+  };
 
-  getAllItems = () => this.container;
+  get length() {
+    return this._length;
+  };
+
+  toArray() {
+    return this._container;
+  };
 }

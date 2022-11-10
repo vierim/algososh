@@ -1,6 +1,6 @@
 class LinkedListNode<T> {
-  value: T;
-  next: LinkedListNode<T> | null;
+  public value: T;
+  public next: LinkedListNode<T> | null;
 
   constructor(value: T, next?: LinkedListNode<T> | null) {
     this.value = value;
@@ -16,6 +16,7 @@ interface ILinkedList<T> {
   deleteHead: () => void;
   deleteTail: () => void;
   toArray: () => Array<T>;
+  _isEmpty: boolean;
   listSize: number;
 }
 
@@ -30,10 +31,18 @@ export class LinkedList<T> implements ILinkedList<T> {
     this._size = 0;
   }
 
+  get _isEmpty() {
+    return this._size === 0;
+  }
+
+  get listSize() {
+    return this._size;
+  }
+
   prepend(node: T) {
     const newNode = new LinkedListNode(node);
 
-    if (this._size === 0) {
+    if (this._isEmpty) {
       this._head = newNode;
       this._tail = newNode;
       this._size++;
@@ -49,7 +58,7 @@ export class LinkedList<T> implements ILinkedList<T> {
   append(node: T) {
     const newNode = new LinkedListNode(node);
 
-    if (this._size === 0) {
+    if (this._isEmpty) {
       this._head = newNode;
       this._tail = newNode;
       this._size++;
@@ -65,11 +74,11 @@ export class LinkedList<T> implements ILinkedList<T> {
   addByIndex(node: T, index: number) {
     const newNode = new LinkedListNode(node);
 
-    if(index === 0) {
-      if(this._size === 1) {
+    if (index === 0) {
+      if (this._size === 1) {
         this._tail = this._head;
       }
-      
+
       newNode.next = this._head;
       this._head = newNode;
       this._size++;
@@ -99,7 +108,7 @@ export class LinkedList<T> implements ILinkedList<T> {
   }
 
   deleteByIndex(index: number) {
-    if(this._size === 1 && index === 0) {
+    if (this._size === 1 && index === 0) {
       this._head = null;
       this._tail = null;
       this._size = 0;
@@ -126,8 +135,7 @@ export class LinkedList<T> implements ILinkedList<T> {
       } else if (current === this._tail) {
         prev.next = null;
         this._tail = prev;
-      }
-      else {
+      } else {
         prev.next = current.next;
       }
     }
@@ -187,9 +195,5 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
 
     return res;
-  }
-
-  get listSize() {
-    return this._size;
   }
 }

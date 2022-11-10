@@ -4,7 +4,7 @@ import { DELAY_IN_MS } from '../../constants/delays';
 import { Stack } from './utils';
 
 import { TStackResult } from '../../types';
-import { Actions } from '../../types/actions';
+import { ActionStates as Actions } from '../../types/action-states';
 import { ElementStates } from '../../types/element-states';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
@@ -32,14 +32,14 @@ export const StackPage: React.FC = () => {
     setValue('');
 
     stackRef.current.push(value);
-    setAction(Actions.Push);
+    setAction(Actions.AddToTail);
   };
 
   const handleRemoveClick = () => {
     setLoader(true);
 
     stackRef.current.pop();
-    setAction(Actions.Pop);
+    setAction(Actions.DeleteFromTail);
   };
 
   const handleCleanClick = () => {
@@ -95,9 +95,9 @@ export const StackPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (action === Actions.Push) {
+    if (action === Actions.AddToTail) {
       showIncreaseStack();
-    } else if (action === Actions.Pop) {
+    } else if (action === Actions.DeleteFromTail) {
       showDecreaseStack();
     } else {
       showDataFromStack();
@@ -108,9 +108,9 @@ export const StackPage: React.FC = () => {
   }, [instant]);
 
   useEffect(() => {
-    if (action === Actions.Push) {
+    if (action === Actions.AddToTail) {
       setInstant(stackRef.current.getLastIndex());
-    } else if (action === Actions.Pop) {
+    } else if (action === Actions.DeleteFromTail) {
       if (stackRef.current.getSize() > 0) {
         setInstant(stackRef.current.getLastIndex() + 1);
       } else {

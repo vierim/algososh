@@ -6,8 +6,7 @@ import { QUEUE_LEN } from '../../constants/queue';
 import { Queue } from './utils';
 import { setDelay } from '../../utils/utils';
 
-import { ActionStates as Actions } from '../../types/action-states';
-import { ElementStates } from '../../types/element-states';
+import { ActionStates as Actions, ElementStates } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';

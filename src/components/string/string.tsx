@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 
 import { DELAY_IN_MS } from '../../constants/delays';
 import { getElementState, ReverseRange } from './utils';
+
 import type { TReverseRangeResult } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';

@@ -3,9 +3,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { DELAY_IN_MS } from '../../constants/delays';
 import { Stack } from './utils';
 
-import { TStackResult } from '../../types';
-import { ActionStates as Actions } from '../../types/action-states';
-import { ElementStates } from '../../types/element-states';
+import {
+  ActionStates as Actions,
+  ElementStates,
+  TStackResult,
+} from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';

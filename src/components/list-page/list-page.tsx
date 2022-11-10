@@ -6,9 +6,11 @@ import { DEFAULT_LIST } from '../../constants/linked-list';
 import { LinkedList } from './utils';
 import { setDelay } from '../../utils/utils';
 
-import { ActionStates as Actions } from '../../types/action-states';
-import { ElementStates } from '../../types/element-states';
-import { Positions } from '../../types/positions';
+import { 
+  ActionStates as Actions, 
+  ElementStates, 
+  Positions 
+} from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -275,8 +277,7 @@ export const ListPage: React.FC = () => {
             onClick={handleAddHeadClick}
             isLoader={loader && action === Actions.AddToHead}
             disabled={
-              (loader && action !== Actions.AddToHead) ||
-              value.length === 0
+              (loader && action !== Actions.AddToHead) || value.length === 0
             }
           />
           <Button
@@ -286,8 +287,7 @@ export const ListPage: React.FC = () => {
             onClick={handleAddTailClick}
             isLoader={loader && action === Actions.AddToTail}
             disabled={
-              (loader && action !== Actions.AddToTail) ||
-              value.length === 0
+              (loader && action !== Actions.AddToTail) || value.length === 0
             }
           />
           <Button
@@ -328,8 +328,7 @@ export const ListPage: React.FC = () => {
             onClick={handleAddByIndex}
             isLoader={loader && action === Actions.AddByIndex}
             disabled={
-              (loader && action !== Actions.AddByIndex) ||
-              isCorrectAddByIndex()
+              (loader && action !== Actions.AddByIndex) || isCorrectAddByIndex()
             }
           />
           <Button

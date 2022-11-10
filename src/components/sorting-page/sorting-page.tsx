@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { randomArr, SortingArray } from './utils';
 
-import { Direction } from '../../types/direction';
-import { ElementStates } from '../../types/element-states';
-import { TSortingResult } from '../../types';
+import { 
+  Direction, 
+  ElementStates, 
+  TSortingResult 
+} from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { RadioInput } from '../ui/radio-input/radio-input';

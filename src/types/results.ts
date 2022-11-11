@@ -7,9 +7,10 @@ export type TReverseRangeResult = {
 }[];
 
 export type TSortingResult = {
-  value: number;
-  state: ElementStates;
-}[];
+  array: number[];
+  current: number[];
+  modified: number[];
+};
 
 export type TStackResult = {
   value: string;

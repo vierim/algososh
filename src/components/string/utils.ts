@@ -1,12 +1,19 @@
-import { TGetElementState } from "../../types";
-import { ElementStates } from "../../types/element-states";
+import { TGetElementState, ElementStates } from '../../types';
 
-export class ReverseRange<T> {
+interface IReverseRange<T> {
+  nextStep: () => void;
+  isReversed: boolean;
+  range: T[];
+  start: number;
+  end: number;
+}
+
+export class ReverseRange<T> implements IReverseRange<T> {
   private _range: T[] = [];
   private _start: number = 0;
   private _end: number = 0;
 
-  public isReversed: boolean = false;
+  isReversed: boolean = false;
 
   protected _swap() {
     let tmp = this._range[this._start];

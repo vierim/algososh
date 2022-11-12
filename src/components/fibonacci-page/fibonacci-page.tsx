@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 
-import { DELAY_IN_MS } from '../../constants/delays';
+import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { getFibonacciNumbers } from './utils';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
@@ -30,7 +30,7 @@ export const FibonacciPage: FC = () => {
 
         return nextStep;
       });
-    }, DELAY_IN_MS);
+    }, SHORT_DELAY_IN_MS);
   };
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +68,7 @@ export const FibonacciPage: FC = () => {
           isLimitText={true}
           value={value}
           onChange={handleChange}
+          disabled={loader}
         />
         <Button
           type={'submit'}

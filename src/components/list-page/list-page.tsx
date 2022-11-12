@@ -6,11 +6,7 @@ import { DEFAULT_LIST } from '../../constants/linked-list';
 import { LinkedList } from './utils';
 import { setDelay } from '../../utils/utils';
 
-import { 
-  ActionStates as Actions, 
-  ElementStates, 
-  Positions 
-} from '../../types';
+import { ActionStates as Actions, ElementStates, Positions } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -247,6 +243,24 @@ export const ListPage: React.FC = () => {
     return !(index > -1 && index < linkedList.current.listSize);
   };
 
+  const composeHeadProperty = (index: number) => {
+    return smallCircleIndex === index &&
+      smallCirclePosition === Positions.Top ? (
+      <Circle letter={currentElement} state={ElementStates.Changing} isSmall />
+    ) : index === 0 ? (
+      'head'
+    ) : undefined;
+  };
+
+  const composeTailProperty = (index: number) => {
+    return smallCircleIndex === index &&
+      smallCirclePosition === Positions.Bottom ? (
+      <Circle letter={currentElement} state={ElementStates.Changing} isSmall />
+    ) : index === result.length - 1 ? (
+      'tail'
+    ) : undefined;
+  };
+
   useEffect(() => {
     DEFAULT_LIST.forEach((item) => {
       linkedList.current.append(item);
@@ -326,8 +340,7 @@ export const ListPage: React.FC = () => {
             onClick={handleAddByIndex}
             isLoader={loader && action === Actions.AddByIndex}
             disabled={
-              (loader && action !== Actions.AddByIndex) || 
-              isCorrectAddByIndex()
+              (loader && action !== Actions.AddByIndex) || isCorrectAddByIndex()
             }
           />
           <Button
@@ -347,46 +360,29 @@ export const ListPage: React.FC = () => {
       <ul className={styles.results}>
         {result.length > 0 &&
           result.map((item, index) => {
+            const currentState =
+              modifiedIndex === index
+                ? ElementStates.Modified
+                : changingIndex >= index
+                ? ElementStates.Changing
+                : ElementStates.Default;
+
+            const head = composeHeadProperty(index);
+            const tail = composeTailProperty(index);
+
             return (
               <li key={index} className={styles.item}>
                 <Circle
                   letter={`${item}`}
                   index={index}
-                  state={
-                    modifiedIndex === index
-                      ? ElementStates.Modified
-                      : changingIndex >= index
-                      ? ElementStates.Changing
-                      : ElementStates.Default
-                  }
-                  head={
-                    smallCircleIndex === index &&
-                    smallCirclePosition === Positions.Top ? (
-                      <Circle
-                        letter={currentElement}
-                        state={ElementStates.Changing}
-                        isSmall
-                      />
-                    ) : index === 0 ? (
-                      'head'
-                    ) : undefined
-                  }
-                  tail={
-                    smallCircleIndex === index &&
-                    smallCirclePosition === Positions.Bottom ? (
-                      <Circle
-                        letter={currentElement}
-                        state={ElementStates.Changing}
-                        isSmall
-                      />
-                    ) : index === result.length - 1 ? (
-                      'tail'
-                    ) : undefined
-                  }
+                  state={currentState}
+                  head={head}
+                  tail={tail}
                 />
+
                 {index !== result.length - 1 && (
                   <ArrowIcon
-                    fill={(changingIndex - 1) >= index ? '#d252e1' : undefined}
+                    fill={changingIndex - 1 >= index ? '#d252e1' : undefined}
                   />
                 )}
               </li>

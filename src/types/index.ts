@@ -6,8 +6,7 @@ import { SortingMethods } from './sorting-methods';
 
 import type {
   TSortingResult,
-  TReverseRangeResult,
-  TStackResult,
+  TReverseRangeResult
 } from './results';
 
 export { 
@@ -18,7 +17,7 @@ export {
   SortingMethods 
 };
 
-export type { TSortingResult, TReverseRangeResult, TStackResult };
+export type { TSortingResult, TReverseRangeResult };
 
 export type TGetElementState = {
   itemIndex: number;

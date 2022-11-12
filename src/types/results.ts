@@ -11,8 +11,3 @@ export type TSortingResult = {
   current: number[];
   modified: number[];
 };
-
-export type TStackResult = {
-  value: string;
-  state: ElementStates;
-}[];

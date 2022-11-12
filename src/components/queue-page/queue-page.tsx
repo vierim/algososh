@@ -128,7 +128,8 @@ export const QueuePage: FC = () => {
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={
-            queue.current.tailPosition === 0 && queue.current.length === 0
+            loader ||
+            (queue.current.tailPosition === 0 && queue.current.length === 0)
           }
         />
       </form>

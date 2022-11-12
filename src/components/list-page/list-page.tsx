@@ -15,6 +15,7 @@ import { Circle } from '../ui/circle/circle';
 import { ArrowIcon } from '../ui/icons/arrow-icon';
 
 import styles from './list.module.css';
+import { ScrollRow } from '../ui/scroll-row/scroll-row';
 
 export const ListPage: React.FC = () => {
   const linkedList = useRef(new LinkedList());
@@ -357,38 +358,40 @@ export const ListPage: React.FC = () => {
         </fieldset>
       </form>
 
-      <ul className={styles.results}>
-        {result.length > 0 &&
-          result.map((item, index) => {
-            const currentState =
-              modifiedIndex === index
-                ? ElementStates.Modified
-                : changingIndex >= index
-                ? ElementStates.Changing
-                : ElementStates.Default;
+      <ScrollRow>
+        <ul className={styles.results}>
+          {result.length > 0 &&
+            result.map((item, index) => {
+              const currentState =
+                modifiedIndex === index
+                  ? ElementStates.Modified
+                  : changingIndex >= index
+                  ? ElementStates.Changing
+                  : ElementStates.Default;
 
-            const head = composeHeadProperty(index);
-            const tail = composeTailProperty(index);
+              const head = composeHeadProperty(index);
+              const tail = composeTailProperty(index);
 
-            return (
-              <li key={index} className={styles.item}>
-                <Circle
-                  letter={`${item}`}
-                  index={index}
-                  state={currentState}
-                  head={head}
-                  tail={tail}
-                />
-
-                {index !== result.length - 1 && (
-                  <ArrowIcon
-                    fill={changingIndex - 1 >= index ? '#d252e1' : undefined}
+              return (
+                <li key={index} className={styles.item}>
+                  <Circle
+                    letter={`${item}`}
+                    index={index}
+                    state={currentState}
+                    head={head}
+                    tail={tail}
                   />
-                )}
-              </li>
-            );
-          })}
-      </ul>
+
+                  {index !== result.length - 1 && (
+                    <ArrowIcon
+                      fill={changingIndex - 1 >= index ? '#d252e1' : undefined}
+                    />
+                  )}
+                </li>
+              );
+            })}
+        </ul>
+      </ScrollRow>
     </SolutionLayout>
   );
 };

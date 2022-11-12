@@ -5,10 +5,7 @@ import { DELAY_IN_MS } from '../../constants/delays';
 import { Stack } from './utils';
 import { setDelay } from '../../utils/utils';
 
-import { 
-  ActionStates as Actions, 
-  ElementStates 
-} from '../../types';
+import { ActionStates as Actions, ElementStates } from '../../types';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
@@ -16,6 +13,7 @@ import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 
 import styles from './stack.module.css';
+import { ScrollRow } from '../ui/scroll-row/scroll-row';
 
 export const StackPage: FC = () => {
   const stackRef = useRef(new Stack());
@@ -111,25 +109,27 @@ export const StackPage: FC = () => {
         />
       </form>
 
-      <ul className={styles.results}>
-        {result.length > 0 &&
-          result.map((item, index) => {
-            return (
-              <li key={index}>
-                <Circle
-                  letter={item}
-                  index={index}
-                  head={index === result?.length - 1 ? 'top' : undefined}
-                  state={
-                    index === instant
-                      ? ElementStates.Changing
-                      : ElementStates.Default
-                  }
-                />
-              </li>
-            );
-          })}
-      </ul>
+      <ScrollRow>
+        <ul className={styles.results}>
+          {result.length > 0 &&
+            result.map((item, index) => {
+              return (
+                <li key={index}>
+                  <Circle
+                    letter={item}
+                    index={index}
+                    head={index === result?.length - 1 ? 'top' : undefined}
+                    state={
+                      index === instant
+                        ? ElementStates.Changing
+                        : ElementStates.Default
+                    }
+                  />
+                </li>
+              );
+            })}
+        </ul>
+      </ScrollRow>
     </SolutionLayout>
   );
 };

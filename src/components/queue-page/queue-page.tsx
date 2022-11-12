@@ -38,12 +38,12 @@ export const QueuePage: FC = () => {
 
     setInstant(
       queue.current.isEmpty
-        ? queue.current.tailPosition
-        : queue.current.tailPosition + 1
+        ? queue.current.tail
+        : queue.current.tail + 1
     );
     await setDelay(SHORT_DELAY_IN_MS);
 
-    queue.current.insert(currentValue);
+    queue.current.enqueue(currentValue);
     showDataFromQueue();
     await setDelay(SHORT_DELAY_IN_MS);
 
@@ -53,12 +53,12 @@ export const QueuePage: FC = () => {
   };
 
   const showDecreaseQueue = async () => {
-    setInstant(queue.current.headPosition);
+    setInstant(queue.current.head);
     await setDelay(SHORT_DELAY_IN_MS);
 
-    queue.current.remove();
+    queue.current.dequeue();
     showDataFromQueue();
-    setInstant(queue.current.headPosition);
+    setInstant(queue.current.head);
     await setDelay(SHORT_DELAY_IN_MS);
 
     setInstant(-1);
@@ -129,7 +129,7 @@ export const QueuePage: FC = () => {
           onClick={handleCleanClick}
           disabled={
             loader ||
-            (queue.current.tailPosition === 0 && queue.current.length === 0)
+            (queue.current.tail === 0 && queue.current.length === 0)
           }
         />
       </form>
@@ -142,15 +142,15 @@ export const QueuePage: FC = () => {
 
             let isEmpty = queue.current.isEmpty;
             let nullablePosition =
-              queue.current.headPosition === 0 &&
-              queue.current.tailPosition === 0;
+              queue.current.head === 0 &&
+              queue.current.tail === 0;
 
             if (isEmpty && nullablePosition) {
               isHead = false;
               isTail = false;
             } else {
-              isHead = index === queue.current.headPosition;
-              isTail = index === queue.current.tailPosition;
+              isHead = index === queue.current.head;
+              isTail = index === queue.current.tail;
             }
 
             return (

@@ -1,14 +1,14 @@
 interface IQueue<T> {
-  insert: (item: T) => void;
-  remove: () => void;
+  enqueue: (item: T) => void;
+  dequeue: () => void;
   peak: () => T | null;
   clear: () => void;
   toArray: () => (T | null)[];
   
   isEmpty: boolean;
   isFull: boolean;
-  headPosition: number;
-  tailPosition: number;
+  head: number;
+  tail: number;
   size: number;
   length: number;
 }
@@ -26,7 +26,7 @@ export class Queue<T> implements IQueue<T> {
     this._container = Array(size).fill(null);
   }
 
-  insert = (item: T) => {
+  enqueue = (item: T) => {
     if (this.isFull) {
       throw new Error('Maximum length exceeded');
     }
@@ -39,7 +39,7 @@ export class Queue<T> implements IQueue<T> {
     this._length++;
   };
 
-  remove = () => {
+  dequeue = () => {
     if (this.isEmpty) {
       throw new Error('No elements in the queue');
     }
@@ -74,11 +74,11 @@ export class Queue<T> implements IQueue<T> {
     return this._tail >= this._size - 1;
   };
 
-  get headPosition() {
+  get head() {
     return this._head;
   };
 
-  get tailPosition() {
+  get tail() {
     return this._tail;
   };
 

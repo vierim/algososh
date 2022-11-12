@@ -1,10 +1,4 @@
 import {
-  MIN_ARRAY_LEN,
-  MAX_ARRAY_LEN,
-  MIN_VALUE,
-  MAX_VALUE,
-} from '../../constants/sorting';
-import {
   SortingMethods,
   Direction,
   ILogStep,
@@ -134,17 +128,3 @@ export class SortableArray<T> implements ISortableArray<T> {
     return this._steps;
   }
 }
-
-export const randomArr = (): number[] => {
-  const newArrayLength =
-    Math.floor(Math.random() * (MAX_ARRAY_LEN - MIN_ARRAY_LEN)) + MIN_ARRAY_LEN;
-
-  const newArray = new Array(newArrayLength)
-    .fill(0)
-    .map(
-      (item) =>
-        item + Math.floor(Math.random() * (MAX_VALUE - MIN_VALUE)) + MIN_VALUE
-    );
-
-  return newArray;
-};

@@ -1,9 +1,15 @@
-import { FC, useState, useRef } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
+import {
+  MIN_ARRAY_LEN,
+  MAX_ARRAY_LEN,
+  MIN_VALUE,
+  MAX_VALUE,
+} from '../../constants/sorting';
 
-import { randomArr, SortableArray } from './utils';
-import { setDelay } from '../../utils/utils';
+import { SortableArray } from './utils';
+import { setDelay, getRandomArr } from '../../utils/utils';
 
 import {
   Direction,
@@ -85,11 +91,20 @@ export const SortingPage: FC = () => {
 
   const handleSetNewArray = () => {
     setResult({
-      array: randomArr(),
+      array: getRandomArr({
+        minLength: MIN_ARRAY_LEN,
+        maxLength: MAX_ARRAY_LEN,
+        minValue: MIN_VALUE,
+        maxValue: MAX_VALUE,
+      }),
       current: [],
       modified: [],
     });
   };
+
+  useEffect(() => {
+    handleSetNewArray();
+  }, []);
 
   return (
     <SolutionLayout title="Сортировка массива">
@@ -150,7 +165,7 @@ export const SortingPage: FC = () => {
           result.array.map((item: number, index: number) => {
             const isCurrent = result.current.includes(index);
             const isModified = result.modified.includes(index);
-            
+
             const state = isCurrent
               ? ElementStates.Changing
               : isModified
@@ -159,10 +174,7 @@ export const SortingPage: FC = () => {
 
             return (
               <li key={index}>
-                <Column
-                  index={item}
-                  state={state}
-                />
+                <Column index={item} state={state} />
               </li>
             );
           })}

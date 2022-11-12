@@ -21,7 +21,7 @@ interface ILinkedList<T> {
   deleteHead: () => void;
   deleteTail: () => void;
   toArray: () => T[];
-  
+
   listSize: number;
 }
 
@@ -30,10 +30,20 @@ export class LinkedList<T> implements ILinkedList<T> {
   private _tail: LinkedListNode<T> | null;
   private _size: number;
 
-  constructor() {
+  constructor(initArray?: T[]) {
     this._head = null;
     this._tail = null;
     this._size = 0;
+
+    if (initArray && initArray.length > 0) {
+      this._init(initArray);
+    }
+  }
+
+  protected _init(initArray: T[]) {
+    initArray.forEach((item) => {
+      this.append(item);
+    });
   }
 
   protected _isEmpty() {

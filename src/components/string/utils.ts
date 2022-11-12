@@ -2,6 +2,7 @@ import { TGetElementState, ElementStates } from '../../types';
 
 interface IReverseRange<T> {
   nextStep: () => void;
+  
   isReversed: boolean;
   range: T[];
   start: number;

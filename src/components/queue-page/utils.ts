@@ -4,10 +4,9 @@ interface IQueue<T> {
   peak: () => T | null;
   clear: () => void;
   toArray: () => (T | null)[];
-
+  
   isEmpty: boolean;
   isFull: boolean;
-
   headPosition: number;
   tailPosition: number;
   size: number;

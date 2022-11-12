@@ -12,13 +12,8 @@ import {
 } from '../../types';
 
 interface ISortableArray<T> {
-  _clearSteps: () => void;
-  _compare: (current: T, compared: T) => boolean;
-  _swap: (current: number, compared: number) => void;
-  _choiceSorting: () => void;
-  _bubbleSorting: () => void;
   sortArray: () => void;
-  _logStep: ({ current, modified }: ILogStep) => void;
+  
   steps: TSortingSteps<T>;
 }
 
@@ -34,30 +29,11 @@ export class SortableArray<T> implements ISortableArray<T> {
     this._direction = Direction.Ascending;
   }
 
-  _clearSteps() {
+  protected _clearSteps() {
     this._steps = [];
   }
 
-  set data(data: T[]) {
-    this._clearSteps();
-    this._array = [...data];
-  }
-
-  set method(method: SortingMethods) {
-    this._clearSteps();
-    this._method = method;
-  }
-
-  set direction(direction: Direction) {
-    this._clearSteps();
-    this._direction = direction;
-  }
-
-  get steps() {
-    return this._steps;
-  }
-
-  _compare(current: T, compared: T) {
+  protected _compare(current: T, compared: T) {
     if (this._direction === Direction.Ascending) {
       return current > compared;
     } else {
@@ -65,13 +41,13 @@ export class SortableArray<T> implements ISortableArray<T> {
     }
   }
 
-  _swap(current: number, compared: number) {
+  protected _swap(current: number, compared: number) {
     let tmp = this._array[current];
     this._array[current] = this._array[compared];
     this._array[compared] = tmp;
   }
 
-  _choiceSorting() {
+  protected _choiceSorting() {
     for (let i = 0; i < this._array.length; i++) {
       let currentInd = i;
 
@@ -90,7 +66,7 @@ export class SortableArray<T> implements ISortableArray<T> {
     }
   }
 
-  _bubbleSorting() {
+  protected _bubbleSorting() {
     for (let i = 0; i < this._array.length; i++) {
       for (let j = i + 1; j < this._array.length; j++) {
         this._logStep({ current: [i, j] });
@@ -117,7 +93,7 @@ export class SortableArray<T> implements ISortableArray<T> {
     }
   }
 
-  _logStep({ current, modified }: ILogStep) {
+  protected _logStep({ current, modified }: ILogStep) {
     if (this._steps.length > 0) {
       const previousStep = this._steps[this._steps.length - 1];
 
@@ -137,6 +113,25 @@ export class SortableArray<T> implements ISortableArray<T> {
         modified: modified !== undefined ? [modified] : [],
       });
     }
+  }
+
+  set data(data: T[]) {
+    this._clearSteps();
+    this._array = [...data];
+  }
+
+  set method(method: SortingMethods) {
+    this._clearSteps();
+    this._method = method;
+  }
+
+  set direction(direction: Direction) {
+    this._clearSteps();
+    this._direction = direction;
+  }
+
+  get steps() {
+    return this._steps;
   }
 }
 

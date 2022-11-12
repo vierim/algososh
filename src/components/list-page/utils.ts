@@ -1,6 +1,11 @@
-class LinkedListNode<T> {
-  public value: T;
-  public next: LinkedListNode<T> | null;
+interface ILinkedListNode<T> {
+  value: T;
+  next: LinkedListNode<T> | null;
+}
+
+class LinkedListNode<T> implements ILinkedListNode<T> {
+  value: T;
+  next: LinkedListNode<T> | null;
 
   constructor(value: T, next?: LinkedListNode<T> | null) {
     this.value = value;
@@ -9,7 +14,6 @@ class LinkedListNode<T> {
 }
 
 interface ILinkedList<T> {
-  _clearList: () => void;
   prepend: (node: T) => void;
   append: (node: T) => void;
   addByIndex: (node: T, index: number) => void;
@@ -17,7 +21,7 @@ interface ILinkedList<T> {
   deleteHead: () => void;
   deleteTail: () => void;
   toArray: () => T[];
-  _isEmpty: boolean;
+  
   listSize: number;
 }
 
@@ -32,15 +36,11 @@ export class LinkedList<T> implements ILinkedList<T> {
     this._size = 0;
   }
 
-  get _isEmpty() {
+  protected _isEmpty() {
     return this._size === 0;
   }
 
-  get listSize() {
-    return this._size;
-  }
-
-  _clearList() {
+  protected _clearList() {
     this._head = null;
     this._tail = null;
     this._size = 0;
@@ -49,7 +49,7 @@ export class LinkedList<T> implements ILinkedList<T> {
   prepend(node: T) {
     const newNode = new LinkedListNode(node);
 
-    if (this._isEmpty) {
+    if (this._isEmpty()) {
       this._head = newNode;
       this._tail = newNode;
       this._size++;
@@ -65,7 +65,7 @@ export class LinkedList<T> implements ILinkedList<T> {
   append(node: T) {
     const newNode = new LinkedListNode(node);
 
-    if (this._isEmpty) {
+    if (this._isEmpty()) {
       this._head = newNode;
       this._tail = newNode;
       this._size++;
@@ -195,5 +195,9 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
 
     return res;
+  }
+
+  get listSize() {
+    return this._size;
   }
 }

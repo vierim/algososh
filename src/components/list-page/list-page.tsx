@@ -23,16 +23,19 @@ import styles from './list.module.css';
 export const ListPage: React.FC = () => {
   const linkedList = useRef(new LinkedList());
 
-  const [value, setValue] = useState('');
-  const [index, setIndex] = useState('');
+  const [value, setValue] = useState<string>('');
+  const [index, setIndex] = useState<number>(-1);
+
   const [result, setResult] = useState<Array<unknown>>([]);
+
   const [loader, setLoader] = useState<boolean>(false);
   const [action, setAction] = useState<Actions | undefined>(undefined);
 
   const [currentElement, setCurrentElement] = useState('');
-  const [smallCircleIndex, setSmallCircleIndex] = useState(-1);
   const [modifiedIndex, setModifiedIndex] = useState(-1);
   const [changingIndex, setChangingIndex] = useState(-1);
+
+  const [smallCircleIndex, setSmallCircleIndex] = useState(-1);
   const [smallCirclePosition, setSmallCirclePosition] = useState<
     Positions | undefined
   >(undefined);
@@ -50,7 +53,7 @@ export const ListPage: React.FC = () => {
   };
 
   const handleIndexChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setIndex(evt.target.value);
+    setIndex(evt.target.value === '' ? -1 : Number.parseInt(evt.target.value));
   };
 
   const handleAddHeadClick = async () => {
@@ -167,21 +170,21 @@ export const ListPage: React.FC = () => {
 
     let currentIndex = 0;
 
-    while (currentIndex <= Number.parseInt(index)) {
+    while (currentIndex <= index) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;
     }
 
     setSmallCirclePosition(Positions.Top);
-    setSmallCircleIndex(Number.parseInt(index));
+    setSmallCircleIndex(index);
     setCurrentElement(value);
     await setDelay(DELAY_IN_MS);
 
-    linkedList.current.addByIndex(value, Number.parseInt(index));
+    linkedList.current.addByIndex(value, index);
 
     setSmallCircleIndex(-1);
-    setModifiedIndex(Number.parseInt(index));
+    setModifiedIndex(index);
     showCurrentResult();
 
     await setDelay(DELAY_IN_MS);
@@ -191,7 +194,7 @@ export const ListPage: React.FC = () => {
     setSmallCirclePosition(undefined);
 
     setValue('');
-    setIndex('');
+    setIndex(-1);
 
     setLoader(false);
     setAction(undefined);
@@ -203,20 +206,20 @@ export const ListPage: React.FC = () => {
 
     let currentIndex = 0;
 
-    while (currentIndex <= Number.parseInt(index)) {
+    while (currentIndex <= index) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;
     }
 
     setSmallCirclePosition(Positions.Bottom);
-    setSmallCircleIndex(Number.parseInt(index));
+    setSmallCircleIndex(index);
 
-    setCurrentElement(String(result[Number.parseInt(index)]));
+    setCurrentElement(String(result[index]));
     setResult((prev) => [
-      ...prev.slice(0, Number.parseInt(index)),
+      ...prev.slice(0, index),
       '',
-      ...prev.slice(Number.parseInt(index) + 1),
+      ...prev.slice(index + 1),
     ]);
     await setDelay(DELAY_IN_MS);
 
@@ -224,8 +227,8 @@ export const ListPage: React.FC = () => {
     setChangingIndex(-1);
     setSmallCirclePosition(undefined);
 
-    linkedList.current.deleteByIndex(Number.parseInt(index));
-    setIndex('');
+    linkedList.current.deleteByIndex(index);
+    setIndex(-1);
     showCurrentResult();
 
     setLoader(false);
@@ -234,19 +237,14 @@ export const ListPage: React.FC = () => {
 
   const isCorrectAddByIndex = (): boolean | undefined => {
     return !(
-      index.length !== 0 &&
       value.length !== 0 &&
-      Number.parseInt(index) > -1 &&
-      Number.parseInt(index) < linkedList.current.listSize
+      index > -1 &&
+      index < linkedList.current.listSize
     );
   };
 
   const isCorrectDeleteByIndex = (): boolean | undefined => {
-    return !(
-      index.length !== 0 &&
-      Number.parseInt(index) > -1 &&
-      Number.parseInt(index) < linkedList.current.listSize
-    );
+    return !(index > -1 && index < linkedList.current.listSize);
   };
 
   useEffect(() => {
@@ -317,7 +315,7 @@ export const ListPage: React.FC = () => {
           <Input
             type={'text'}
             placeholder={'Введите индекс'}
-            value={index}
+            value={index === -1 ? '' : index}
             onChange={handleIndexChange}
             disabled={loader}
           />
@@ -328,7 +326,8 @@ export const ListPage: React.FC = () => {
             onClick={handleAddByIndex}
             isLoader={loader && action === Actions.AddByIndex}
             disabled={
-              (loader && action !== Actions.AddByIndex) || isCorrectAddByIndex()
+              (loader && action !== Actions.AddByIndex) || 
+              isCorrectAddByIndex()
             }
           />
           <Button
@@ -387,7 +386,7 @@ export const ListPage: React.FC = () => {
                 />
                 {index !== result.length - 1 && (
                   <ArrowIcon
-                    fill={changingIndex - 1 >= index ? '#d252e1' : undefined}
+                    fill={(changingIndex - 1) >= index ? '#d252e1' : undefined}
                   />
                 )}
               </li>

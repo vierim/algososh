@@ -16,7 +16,7 @@ interface ILinkedList<T> {
   deleteByIndex: (index: number) => void;
   deleteHead: () => void;
   deleteTail: () => void;
-  toArray: () => Array<T>;
+  toArray: () => T[];
   _isEmpty: boolean;
   listSize: number;
 }
@@ -182,7 +182,7 @@ export class LinkedList<T> implements ILinkedList<T> {
   }
 
   toArray() {
-    let res: Array<T> = [];
+    let res: T[] = [];
     let current = this._head;
 
     if (current) {

@@ -26,7 +26,7 @@ export const ListPage: React.FC = () => {
   const [value, setValue] = useState<string>('');
   const [index, setIndex] = useState<number>(-1);
 
-  const [result, setResult] = useState<Array<unknown>>([]);
+  const [result, setResult] = useState<unknown[]>([]);
 
   const [loader, setLoader] = useState<boolean>(false);
   const [action, setAction] = useState<Actions | undefined>(undefined);

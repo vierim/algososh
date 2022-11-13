@@ -71,7 +71,7 @@ export const StackPage: FC = () => {
 
   return (
     <SolutionLayout title="Стек">
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
         <fieldset className={styles.form__group}>
           <Input
             type={'text'}

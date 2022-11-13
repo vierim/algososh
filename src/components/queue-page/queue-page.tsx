@@ -91,7 +91,7 @@ export const QueuePage: FC = () => {
 
   return (
     <SolutionLayout title="Очередь">
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
         <fieldset className={styles.form__group}>
           <Input
             type={'text'}

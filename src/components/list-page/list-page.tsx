@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useForm } from '../../hooks/useForm';
 
 import { DELAY_IN_MS } from '../../constants/delays';
 import {
@@ -34,8 +35,20 @@ export const ListPage: React.FC = () => {
     )
   );
 
-  const [value, setValue] = useState<string>('');
-  const [index, setIndex] = useState<number>(-1);
+  const { values, handleChange, clearValue } = useForm({
+    value: '',
+    index: -1,
+  });
+
+  const value =
+    typeof values['value'] !== 'string'
+      ? String(values['value'])
+      : values['value'];
+
+  const index =
+    typeof values['index'] === 'string'
+      ? Number.parseInt(values['index'])
+      : values['index'];
 
   const [result, setResult] = useState<string[]>([]);
 
@@ -59,14 +72,6 @@ export const ListPage: React.FC = () => {
     );
   };
 
-  const handleValueChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(evt.target.value);
-  };
-
-  const handleIndexChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setIndex(evt.target.value === '' ? -1 : Number.parseInt(evt.target.value));
-  };
-
   const handleAddHeadClick = async () => {
     setLoader(true);
     setAction(Actions.AddToHead);
@@ -75,7 +80,7 @@ export const ListPage: React.FC = () => {
 
     if (result.length > 0) {
       setCurrentElement(value);
-      setValue('');
+      clearValue('value');
 
       setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(0);
@@ -89,7 +94,7 @@ export const ListPage: React.FC = () => {
       setModifiedIndex(-1);
       setSmallCirclePosition(undefined);
     } else {
-      setValue('');
+      clearValue('value');
       showCurrentResult();
       setModifiedIndex(0);
 
@@ -109,7 +114,7 @@ export const ListPage: React.FC = () => {
 
     if (result.length > 0) {
       setCurrentElement(value);
-      setValue('');
+      clearValue('value');
 
       setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(linkedList.current.listSize - 2);
@@ -123,7 +128,7 @@ export const ListPage: React.FC = () => {
       setModifiedIndex(-1);
       setSmallCirclePosition(undefined);
     } else {
-      setValue('');
+      clearValue('value');
       showCurrentResult();
       setModifiedIndex(0);
 
@@ -204,8 +209,8 @@ export const ListPage: React.FC = () => {
     setChangingIndex(-1);
     setSmallCirclePosition(undefined);
 
-    setValue('');
-    setIndex(-1);
+    clearValue('value');
+    clearValue('index');
 
     setLoader(false);
     setAction(undefined);
@@ -239,7 +244,7 @@ export const ListPage: React.FC = () => {
     setSmallCirclePosition(undefined);
 
     linkedList.current.deleteByIndex(index);
-    setIndex(-1);
+    clearValue('index');
     showCurrentResult();
 
     setLoader(false);
@@ -290,7 +295,8 @@ export const ListPage: React.FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
-            onChange={handleValueChange}
+            name={'value'}
+            onChange={handleChange}
             disabled={loader}
           />
           <Button
@@ -341,7 +347,8 @@ export const ListPage: React.FC = () => {
             type={'text'}
             placeholder={'Введите индекс'}
             value={index === -1 ? '' : index}
-            onChange={handleIndexChange}
+            name={'index'}
+            onChange={handleChange}
             disabled={loader}
           />
           <Button

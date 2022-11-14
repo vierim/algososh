@@ -1,4 +1,5 @@
-import { FC, useState, useRef, ChangeEvent } from 'react';
+import { FC, useState, useRef } from 'react';
+import { useForm } from '../../hooks/useForm';
 
 import { DELAY_IN_MS } from '../../constants/delays';
 
@@ -18,7 +19,12 @@ import { ScrollRow } from '../ui/scroll-row/scroll-row';
 export const StackPage: FC = () => {
   const stackRef = useRef(new Stack());
 
-  const [value, setValue] = useState('');
+  const { values, handleChange, clearValue } = useForm({ value: '' });
+  const value =
+    typeof values['value'] !== 'string'
+      ? String(values['value'])
+      : values['value'];
+
   const [result, setResult] = useState<string[]>([]);
   const [action, setAction] = useState<Actions>(Actions.Waiting);
   const [instant, setInstant] = useState<number>(-1);
@@ -29,17 +35,13 @@ export const StackPage: FC = () => {
     setResult(stack.length > 0 ? stack.map((item) => String(item)) : []);
   };
 
-  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setValue(evt.target.value);
-  };
-
   const handleAddClick = async () => {
     setLoader(true);
     stackRef.current.push(value);
 
     setInstant(stackRef.current.lastIndex);
     setAction(Actions.AddToTail);
-    setValue('');
+    clearValue('value');
 
     showDataFromStack();
     await setDelay(DELAY_IN_MS);
@@ -65,6 +67,7 @@ export const StackPage: FC = () => {
   };
 
   const handleCleanClick = () => {
+    clearValue('value');
     stackRef.current.clear();
     showDataFromStack();
   };
@@ -78,6 +81,7 @@ export const StackPage: FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
+            name={'value'}
             onChange={handleChange}
             disabled={loader}
           />

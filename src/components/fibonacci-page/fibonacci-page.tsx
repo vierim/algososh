@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
+import { useForm } from '../../hooks/useForm';
 
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { getFibonacciNumbers } from './utils';
@@ -14,7 +15,12 @@ export const FibonacciPage: FC = () => {
   const fibonacciNumbers = useRef<number[]>([]);
   const timerId = useRef<NodeJS.Timeout>();
 
-  const [value, setValue] = useState<number>(0);
+  const { values, handleChange } = useForm({ value: 0 });
+  const value =
+    typeof values['value'] !== 'number'
+      ? Number.parseInt(values['value'])
+      : values['value'];
+
   const [loader, setLoader] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
 
@@ -31,14 +37,6 @@ export const FibonacciPage: FC = () => {
         return nextStep;
       });
     }, SHORT_DELAY_IN_MS);
-  };
-
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Number.parseInt(evt.target.value);
-
-    if (val >= 0 && val <= 19) {
-      setValue(val);
-    }
   };
 
   const handleClick = (evt: React.MouseEvent) => {
@@ -67,6 +65,7 @@ export const FibonacciPage: FC = () => {
           max={19}
           isLimitText={true}
           value={value}
+          name={'value'}
           onChange={handleChange}
           disabled={loader}
         />
@@ -74,7 +73,7 @@ export const FibonacciPage: FC = () => {
           type={'submit'}
           text={'Рассчитать'}
           onClick={handleClick}
-          disabled={value < 1}
+          disabled={value < 1 || value > 19}
           isLoader={loader}
         />
       </form>

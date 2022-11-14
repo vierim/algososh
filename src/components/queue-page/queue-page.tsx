@@ -1,4 +1,5 @@
 import { FC, useState, useRef } from 'react';
+import { useForm } from '../../hooks/useForm';
 
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { QUEUE_LEN } from '../../constants/queue';
@@ -18,7 +19,12 @@ import styles from './queue.module.css';
 export const QueuePage: FC = () => {
   const queue = useRef(new Queue(QUEUE_LEN));
 
-  const [value, setValue] = useState<string>('');
+  const { values, handleChange, clearValue } = useForm({ value: '' });
+  const value =
+    typeof values['value'] !== 'string'
+      ? String(values['value'])
+      : values['value'];
+
   const [result, setResult] = useState<(string | null)[]>(
     new Array(QUEUE_LEN).fill(null)
   );
@@ -34,7 +40,7 @@ export const QueuePage: FC = () => {
 
   const showIncreaseQueue = async () => {
     const currentValue = value;
-    setValue('');
+    clearValue('value');
 
     setInstant(
       queue.current.isEmpty
@@ -66,10 +72,6 @@ export const QueuePage: FC = () => {
     setAction(Actions.Waiting);
   };
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(evt.target.value);
-  };
-
   const handleAddClick = () => {
     setLoader(true);
     setAction(Actions.AddToTail);
@@ -85,6 +87,7 @@ export const QueuePage: FC = () => {
   };
 
   const handleCleanClick = () => {
+    clearValue('value');
     queue.current.clear();
     showDataFromQueue();
   };
@@ -98,6 +101,7 @@ export const QueuePage: FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
+            name={'value'}
             onChange={handleChange}
             disabled={loader}
           />

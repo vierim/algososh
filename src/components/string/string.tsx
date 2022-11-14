@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
+import { useForm } from '../../hooks/useForm';
 
 import { DELAY_IN_MS } from '../../constants/delays';
 import { getElementState, ReverseRange } from './utils';
@@ -16,7 +17,12 @@ export const StringComponent: FC = () => {
   const rangeRef = useRef(new ReverseRange<string>());
   const timerId = useRef<NodeJS.Timeout>();
 
-  const [value, setValue] = useState('');
+  const { values, handleChange, clearValue } = useForm({ range: '' });
+  const range =
+    typeof values['range'] !== 'string'
+      ? String(values['range'])
+      : values['range'];
+
   const [result, setResult] = useState<TReverseRangeResult>([]);
   const [loader, setLoader] = useState<boolean>(false);
 
@@ -55,22 +61,11 @@ export const StringComponent: FC = () => {
     showCurrentResult();
   };
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    if (!loader) {
-      const newValue = evt.target.value;
-      const lastChar = newValue[newValue.length - 1];
-
-      if (lastChar !== ' ') {
-        setValue(evt.target.value);
-      }
-    }
-  };
-
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    rangeRef.current.range = value.split('');
-    setValue('');
+    rangeRef.current.range = range.split('');
+    clearValue('range');
     showCurrentResult();
 
     if (!rangeRef.current.isReversed) {
@@ -95,18 +90,20 @@ export const StringComponent: FC = () => {
     <SolutionLayout title="Строка">
       <form className={styles.form}>
         <Input
+          name={'range'}
+          value={range}
           type={'text'}
           maxLength={11}
           isLimitText={true}
-          value={value}
           onChange={handleChange}
+          disabled={loader}
         />
         <Button
           type={'submit'}
           text={'Развернуть'}
           onClick={handleClick}
           isLoader={loader}
-          disabled={value.length === 0}
+          disabled={!range || range?.length === 0}
         />
       </form>
 

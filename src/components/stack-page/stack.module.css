@@ -1,0 +1,24 @@
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 80px;
+  margin: 0 auto;
+}
+
+.form__group {
+  display: flex;
+  min-width: 630px;
+  gap: 12px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.results {
+  display: inline-flex;
+  gap: 16px;
+  margin: 0;
+  padding: 78px 0 40px;
+  list-style: none;
+}

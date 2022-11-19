@@ -13,7 +13,7 @@ import styles from "./app.module.css";
 function App() {
   return (
     <div className={styles.app}>
-      <BrowserRouter>
+      <BrowserRouter basename={"/algososh/"}>
         <Switch>
           <Route path="/" exact>
             <MainPage />

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as renderer from 'react-test-renderer';
+import renderer from 'react-test-renderer';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import { Button } from './button';

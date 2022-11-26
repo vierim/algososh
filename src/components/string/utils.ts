@@ -11,8 +11,8 @@ interface IReverseRange<T> {
 
 export class ReverseRange<T> implements IReverseRange<T> {
   private _range: T[] = [];
-  private _start: number = 0;
-  private _end: number = 0;
+  private _start: number = 0; // указатель на текущую позицию с начала массива
+  private _end: number = 0; // указатель на текущую позицию с конца строки
 
   isReversed: boolean = false;
 
@@ -28,10 +28,10 @@ export class ReverseRange<T> implements IReverseRange<T> {
 
       this._start++;
       this._end--;
-    }
 
-    if (this._start >= this._end) {
-      this.isReversed = true;
+      if (this._start >= this._end) {
+        this.isReversed = true;
+      }
     }
   }
 

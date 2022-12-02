@@ -10,10 +10,10 @@ describe('Page with algorithm "Fibonacci" is testing', () => {
     cy.get('button[type="submit"]').should('be.disabled');
   });
 
-  // it('Submit button should be disabled on typed empty string in input (clear it)', () => {
-  //   cy.get('input').clear();
-  //   cy.get('button[type="submit"]').should('be.disabled');
-  // });
+  it('Submit button should be disabled on typed empty string in input (clear it)', () => {
+    cy.get('input').clear();
+    cy.get('button[type="submit"]').should('be.disabled');
+  });
 
   it('Should have correct fibonacci numbers and its indexes', () => {
     const startValue = '4';

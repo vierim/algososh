@@ -20,10 +20,7 @@ export const StackPage: FC = () => {
   const stackRef = useRef(new Stack());
 
   const { values, handleChange, clearValue } = useForm({ value: '' });
-  const value =
-    typeof values['value'] !== 'string'
-      ? String(values['value'])
-      : values['value'];
+  const value = values['value'];
 
   const [result, setResult] = useState<string[]>([]);
   const [action, setAction] = useState<Actions>(Actions.Waiting);

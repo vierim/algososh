@@ -15,11 +15,8 @@ export const FibonacciPage: FC = () => {
   const fibonacciNumbers = useRef<number[]>([]);
   const timerId = useRef<NodeJS.Timeout>();
 
-  const { values, handleChange } = useForm({ value: 0 });
-  const value =
-    typeof values['value'] !== 'number'
-      ? Number.parseInt(values['value'])
-      : values['value'];
+  const { values, handleChange } = useForm({ value: '0' });
+  const value = values['value'];
 
   const [loader, setLoader] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
@@ -42,7 +39,7 @@ export const FibonacciPage: FC = () => {
   const handleClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
-    fibonacciNumbers.current = getFibonacciNumbers(value);
+    fibonacciNumbers.current = getFibonacciNumbers(Number.parseInt(value));
     setStep(0);
     setLoader(true);
 
@@ -73,7 +70,11 @@ export const FibonacciPage: FC = () => {
           type={'submit'}
           text={'Рассчитать'}
           onClick={handleClick}
-          disabled={value < 1 || value > 19}
+          disabled={
+            value === '' ||
+            Number.parseInt(value) < 1 ||
+            Number.parseInt(value) > 19
+          }
           isLoader={loader}
         />
       </form>

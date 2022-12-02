@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react';
 
 interface IInputValues {
-  [key: string]: string | number;
+  [key: string]: string;
 }
 
 export function useForm(inputValues: IInputValues) {
@@ -13,8 +13,7 @@ export function useForm(inputValues: IInputValues) {
   };
 
   const clearValue = (name: string) => {
-    const isString = typeof inputValues[name] === 'string';
-    setValues((prevState) => ({ ...prevState, [name]: isString ? '' : -1 }));
+    setValues((prevState) => ({ ...prevState, [name]: '' }));
   };
 
   return { values, handleChange, setValues, clearValue };

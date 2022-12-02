@@ -37,18 +37,11 @@ export const ListPage: React.FC = () => {
 
   const { values, handleChange, clearValue } = useForm({
     value: '',
-    index: -1,
+    index: '',
   });
 
-  const value =
-    typeof values['value'] !== 'string'
-      ? String(values['value'])
-      : values['value'];
-
-  const index =
-    typeof values['index'] === 'string'
-      ? Number.parseInt(values['index'])
-      : values['index'];
+  const value = values['value'];
+  const index = values['index'];
 
   const [result, setResult] = useState<string[]>([]);
 
@@ -186,21 +179,21 @@ export const ListPage: React.FC = () => {
 
     let currentIndex = 0;
 
-    while (currentIndex <= index) {
+    while (currentIndex <= Number.parseInt(index)) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;
     }
 
     setSmallCirclePosition(Positions.Top);
-    setSmallCircleIndex(index);
+    setSmallCircleIndex(Number.parseInt(index));
     setCurrentElement(value);
     await setDelay(DELAY_IN_MS);
 
-    linkedList.current.addByIndex(value, index);
+    linkedList.current.addByIndex(value, Number.parseInt(index));
 
     setSmallCircleIndex(-1);
-    setModifiedIndex(index);
+    setModifiedIndex(Number.parseInt(index));
     showCurrentResult();
 
     await setDelay(DELAY_IN_MS);
@@ -222,20 +215,20 @@ export const ListPage: React.FC = () => {
 
     let currentIndex = 0;
 
-    while (currentIndex <= index) {
+    while (currentIndex <= Number.parseInt(index)) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;
     }
 
     setSmallCirclePosition(Positions.Bottom);
-    setSmallCircleIndex(index);
+    setSmallCircleIndex(Number.parseInt(index));
 
-    setCurrentElement(result[index]);
+    setCurrentElement(result[Number.parseInt(index)]);
     setResult((prev) => [
-      ...prev.slice(0, index),
+      ...prev.slice(0, Number.parseInt(index)),
       '',
-      ...prev.slice(index + 1),
+      ...prev.slice(Number.parseInt(index) + 1),
     ]);
     await setDelay(DELAY_IN_MS);
 
@@ -243,7 +236,7 @@ export const ListPage: React.FC = () => {
     setChangingIndex(-1);
     setSmallCirclePosition(undefined);
 
-    linkedList.current.deleteByIndex(index);
+    linkedList.current.deleteByIndex(Number.parseInt(index));
     clearValue('index');
     showCurrentResult();
 
@@ -254,13 +247,16 @@ export const ListPage: React.FC = () => {
   const isCorrectAddByIndex = (): boolean | undefined => {
     return !(
       value.length !== 0 &&
-      index > -1 &&
-      index < linkedList.current.listSize
+      Number.parseInt(index) > -1 &&
+      Number.parseInt(index) < linkedList.current.listSize
     );
   };
 
   const isCorrectDeleteByIndex = (): boolean | undefined => {
-    return !(index > -1 && index < linkedList.current.listSize);
+    return !(
+      Number.parseInt(index) > -1 &&
+      Number.parseInt(index) < linkedList.current.listSize
+    );
   };
 
   const composeHeadProperty = (index: number) => {
@@ -346,7 +342,7 @@ export const ListPage: React.FC = () => {
           <Input
             type={'text'}
             placeholder={'Введите индекс'}
-            value={index === -1 ? '' : index}
+            value={index}
             name={'index'}
             onChange={handleChange}
             disabled={loader}

@@ -20,10 +20,7 @@ export const QueuePage: FC = () => {
   const queue = useRef(new Queue(QUEUE_LEN));
 
   const { values, handleChange, clearValue } = useForm({ value: '' });
-  const value =
-    typeof values['value'] !== 'string'
-      ? String(values['value'])
-      : values['value'];
+  const value = values['value'];
 
   const [result, setResult] = useState<(string | null)[]>(
     new Array(QUEUE_LEN).fill(null)

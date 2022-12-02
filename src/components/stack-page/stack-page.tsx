@@ -84,6 +84,7 @@ export const StackPage: FC = () => {
           />
           <Button
             type={'button'}
+            name={'add'}
             text={'Добавить'}
             onClick={handleAddClick}
             isLoader={loader && action === Actions.AddToTail}
@@ -93,6 +94,7 @@ export const StackPage: FC = () => {
           />
           <Button
             type={'button'}
+            name={'delete'}
             text={'Удалить'}
             onClick={handleRemoveClick}
             isLoader={loader && action === Actions.DeleteFromTail}
@@ -104,6 +106,7 @@ export const StackPage: FC = () => {
         </fieldset>
         <Button
           type={'button'}
+          name={'clear'}
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={loader || result.length === 0}

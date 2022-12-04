@@ -104,6 +104,7 @@ export const QueuePage: FC = () => {
           />
           <Button
             type={'button'}
+            name={'add'}
             text={'Добавить'}
             onClick={handleAddClick}
             isLoader={loader && action === Actions.AddToTail}
@@ -115,6 +116,7 @@ export const QueuePage: FC = () => {
           />
           <Button
             type={'button'}
+            name={'delete'}
             text={'Удалить'}
             onClick={handleRemoveClick}
             isLoader={loader && action === Actions.DeleteFromHead}
@@ -126,6 +128,7 @@ export const QueuePage: FC = () => {
         </fieldset>
         <Button
           type={'button'}
+          name={'clear'}
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={

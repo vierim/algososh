@@ -5,13 +5,11 @@ describe('Page with algorithm "Stack" is testing', () => {
     cy.visit('http://localhost:3000/stack');
   });
 
-  // Проверьте, что если в инпуте пусто, то кнопка добавления недоступна.
   it('Submit button should be disabled', () => {
     cy.get('input').should('have.value', '');
     cy.get('button[name="add"]').should('be.disabled');
   });
 
-  // Проверьте правильность добавления элемента в стек. Важно убедиться, что цвета элементов меняются и каждый шаг анимации отрабатывает корректно.
   it('Should have correct visualization during elements adding', () => {
     cy.get('input').type('1').should('have.value', '1');
     cy.get('button[name="add"]').click();

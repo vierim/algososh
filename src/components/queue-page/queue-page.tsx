@@ -1,8 +1,7 @@
 import { FC, useState, useRef } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-import { QUEUE_LEN } from '../../constants/queue';
+import { SHORT_DELAY_IN_MS, QUEUE_LEN } from '../../constants';
 
 import { Queue } from './utils';
 import { setDelay } from '../../utils/utils';

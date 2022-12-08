@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
+import { SHORT_DELAY_IN_MS } from '../../constants';
 import { getFibonacciNumbers } from './utils';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';

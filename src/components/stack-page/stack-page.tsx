@@ -1,7 +1,7 @@
 import { FC, useState, useRef } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { DELAY_IN_MS } from '../../constants/delays';
+import { DELAY_IN_MS } from '../../constants';
 
 import { Stack } from './utils';
 import { setDelay } from '../../utils/utils';

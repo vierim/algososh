@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { DELAY_IN_MS } from '../../constants/delays';
 import {
+  DELAY_IN_MS,
   MIN_LIST_LEN,
   MAX_LIST_LEN,
   MIN_LIST_VALUE,
   MAX_LIST_VALUE,
-} from '../../constants/linked-list';
+} from '../../constants';
 
 import { LinkedList } from './utils';
 import { getRandomArr, setDelay } from '../../utils/utils';

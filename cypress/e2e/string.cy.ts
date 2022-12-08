@@ -1,4 +1,4 @@
-import { DELAY_IN_MS } from '../../src/constants/delays';
+import { DELAY_IN_MS } from '../../src/constants';
 
 describe('Page with algorithm "String" is testing', () => {
   before(() => {

@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { DELAY_IN_MS } from '../../constants/delays';
+import { DELAY_IN_MS } from '../../constants';
 import { getElementState, ReverseRange } from './utils';
 
 import type { TReverseRangeResult } from '../../types';

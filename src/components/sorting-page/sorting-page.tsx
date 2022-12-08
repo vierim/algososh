@@ -1,12 +1,12 @@
 import { FC, useState, useEffect, useRef } from 'react';
 
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import {
+  SHORT_DELAY_IN_MS, 
   MIN_ARRAY_LEN,
   MAX_ARRAY_LEN,
   MIN_VALUE,
   MAX_VALUE,
-} from '../../constants/sorting';
+} from '../../constants';
 
 import { SortableArray } from './utils';
 import { setDelay, getRandomArr } from '../../utils/utils';

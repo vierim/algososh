@@ -278,7 +278,7 @@ export const ListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    showCurrentResult();
+    showCurrentResult();  
   }, []);
 
   return (
@@ -297,6 +297,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'addToHeadButton'}
             text={'Добавить в head'}
             style={{ minWidth: '175px' }}
             onClick={handleAddHeadClick}
@@ -307,6 +308,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'addToTailButton'}
             text={'Добавить в tail'}
             style={{ minWidth: '175px' }}
             onClick={handleAddTailClick}
@@ -317,6 +319,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'deleteFromHeadButton'}
             text={'Удалить из head'}
             style={{ minWidth: '175px' }}
             onClick={handleDeleteHeadClick}
@@ -328,6 +331,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'deleteFromTailButton'}
             text={'Удалить из tail'}
             style={{ minWidth: '175px' }}
             onClick={handleDeleteTailClick}
@@ -349,6 +353,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'addByIndexButton'}
             text={'Добавить по индексу'}
             style={{ minWidth: '362px' }}
             onClick={handleAddByIndex}
@@ -359,6 +364,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'deleteByIndexButton'}
             text={'Удалить по индексу'}
             style={{ minWidth: '362px' }}
             onClick={handleDeleteByIndex}

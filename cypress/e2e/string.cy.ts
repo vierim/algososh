@@ -36,9 +36,9 @@ describe('Page with algorithm "String" is testing', () => {
       .each((el, index) => {
         cy.wrap(el).contains(steps[1][index]);
       });
-    
-    cy.get('[class*=circle_content]:first-of-type').find('[class*=circle_changing]');
-    cy.get('[class*=circle_content]:last-of-type').find('[class*=circle_changing]');
+
+    cy.get('[class*=circle_content]').first().find('[class*=circle_changing]');
+    cy.get('[class*=circle_content]').last().find('[class*=circle_changing]');
 
     cy.wait(DELAY_IN_MS);
 

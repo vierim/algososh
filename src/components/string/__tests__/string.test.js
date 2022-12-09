@@ -29,18 +29,22 @@ describe('Тестирование алгоритма разворота ряд�
     expect(evenRange.range).toEqual(
       expect.arrayContaining(evenLengthResultSteps[0])
     );
+
     evenRange.nextStep();
     expect(evenRange.range).toEqual(
       expect.arrayContaining(evenLengthResultSteps[1])
     );
+
     evenRange.nextStep();
     expect(evenRange.range).toEqual(
       expect.arrayContaining(evenLengthResultSteps[2])
     );
+
     evenRange.nextStep();
     expect(evenRange.range).toEqual(
       expect.arrayContaining(evenLengthResultSteps[3])
     );
+
     expect(evenRange.isReversed).toBe(true);
   });
 
@@ -51,14 +55,17 @@ describe('Тестирование алгоритма разворота ряд�
     expect(oddRange.range).toEqual(
       expect.arrayContaining(oddLengthResultSteps[0])
     );
+
     oddRange.nextStep();
     expect(oddRange.range).toEqual(
       expect.arrayContaining(oddLengthResultSteps[1])
     );
+
     oddRange.nextStep();
     expect(oddRange.range).toEqual(
       expect.arrayContaining(oddLengthResultSteps[2])
     );
+
     expect(oddRange.isReversed).toBe(true);
   });
 

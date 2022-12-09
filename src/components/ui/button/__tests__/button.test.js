@@ -2,7 +2,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { render, screen, fireEvent } from '@testing-library/react';
 
-import { Button } from './button';
+import { Button } from '../button';
 
 const buttonText = 'Кнопка с текстом';
 

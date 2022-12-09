@@ -420,4 +420,4 @@ describe('Page with DS "Linked List" is testing', () => {
   });
 });
 
-export {};
+export { };

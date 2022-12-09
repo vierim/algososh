@@ -1,4 +1,3 @@
-import { isEmpty } from 'cypress/types/lodash';
 import { SHORT_DELAY_IN_MS, QUEUE_LEN } from '../../src/constants';
 
 describe('Page with algorithm "String" is testing', () => {
@@ -209,3 +208,5 @@ describe('Page with algorithm "String" is testing', () => {
     cy.get('button[name="clear"]').should('be.disabled');
   });
 });
+
+export { };

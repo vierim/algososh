@@ -170,3 +170,5 @@ describe('Page with algorithm "Stack" is testing', () => {
     );
   });
 });
+
+export { };

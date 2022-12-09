@@ -102,3 +102,5 @@ describe('Page with algorithm "Fibonacci" is testing', () => {
       });
   });
 });
+
+export { };

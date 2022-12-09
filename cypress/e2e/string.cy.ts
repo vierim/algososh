@@ -71,3 +71,5 @@ describe('Page with algorithm "String" is testing', () => {
     cy.get('button[type="submit"]').should('be.disabled');
   });
 });
+
+export { };

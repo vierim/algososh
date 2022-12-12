@@ -1,6 +1,6 @@
 import { SHORT_DELAY_IN_MS, QUEUE_LEN } from '../../src/constants';
 
-describe('Page with algorithm "String" is testing', () => {
+describe('Page with data structure "Queue" is testing', () => {
   before(() => {
     cy.visit('/queue');
   });

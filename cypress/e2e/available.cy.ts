@@ -1,5 +1,5 @@
 describe('Базовые тесты приложения', () => {
-  it('Приложение успешно запустилось и доступно по адресу localhost:3000', () => {
+  it('Application should be successfully started', () => {
     cy.visit('/');
   });
 })

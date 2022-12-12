@@ -1,6 +1,6 @@
 import { SHORT_DELAY_IN_MS } from '../../src/constants';
 
-describe('Page with algorithm "Stack" is testing', () => {
+describe('Page with data structure "Stack" is testing', () => {
   before(() => {
     cy.visit('/stack');
   });

@@ -1,6 +1,6 @@
 import { MIN_LIST_LEN, MAX_LIST_LEN, DELAY_IN_MS } from '../../src/constants';
 
-describe('Page with DS "Linked List" is testing', () => {
+describe('Page with data structure "LinkedList" is testing', () => {
   beforeEach(() => {
     cy.visit('/list');
   });

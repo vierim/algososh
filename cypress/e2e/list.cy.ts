@@ -2,7 +2,7 @@ import { MIN_LIST_LEN, MAX_LIST_LEN, DELAY_IN_MS } from '../../src/constants';
 
 describe('Page with DS "Linked List" is testing', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/list');
+    cy.visit('/list');
   });
 
   it('Buttons should be disabled', () => {

@@ -2,7 +2,7 @@ import { SHORT_DELAY_IN_MS, QUEUE_LEN } from '../../src/constants';
 
 describe('Page with algorithm "String" is testing', () => {
   before(() => {
-    cy.visit('http://localhost:3000/queue');
+    cy.visit('/queue');
   });
 
   it('Submit button should be disabled', () => {

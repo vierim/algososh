@@ -2,7 +2,7 @@ import { DELAY_IN_MS } from '../../src/constants';
 
 describe('Page with algorithm "String" is testing', () => {
   before(() => {
-    cy.visit('http://localhost:3000/recursion');
+    cy.visit('recursion');
   });
 
   it('Submit button should be disabled', () => {

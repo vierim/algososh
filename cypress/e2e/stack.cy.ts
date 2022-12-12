@@ -2,7 +2,7 @@ import { SHORT_DELAY_IN_MS } from '../../src/constants';
 
 describe('Page with algorithm "Stack" is testing', () => {
   before(() => {
-    cy.visit('http://localhost:3000/stack');
+    cy.visit('/stack');
   });
 
   it('Submit button should be disabled', () => {

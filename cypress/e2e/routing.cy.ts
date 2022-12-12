@@ -1,4 +1,4 @@
-describe('Тестирование роутинга приложения', () => {
+describe('Tests for routing in application', () => {
   it('Page with algorithm "String" should be available', () => {
     cy.visit('/recursion');
     cy.get('h3').should('have.text', 'Строка');

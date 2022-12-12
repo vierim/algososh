@@ -1,3 +1,4 @@
+import { CSS_SELECTORS, BASIC_LABELS } from './e2e-constants';
 import { SHORT_DELAY_IN_MS, QUEUE_LEN } from '../../src/constants';
 
 describe('Page with data structure "Queue" is testing', () => {
@@ -6,206 +7,206 @@ describe('Page with data structure "Queue" is testing', () => {
   });
 
   it('Submit button should be disabled', () => {
-    cy.get('input').should('have.value', '');
-    cy.get('button[name="add"]').should('be.disabled');
+    cy.get(CSS_SELECTORS.singleInput).should('have.value', '');
+    cy.get(CSS_SELECTORS.addButton).should('be.disabled');
   });
 
   it('Should have correct visualization during elements adding', () => {
 
     // Add first element to queue
-    cy.get('input').type('1').should('have.value', '1');
-    cy.get('button[name="add"]').click();
+    cy.get(CSS_SELECTORS.singleInput).type('1').should('have.value', '1');
+    cy.get(CSS_SELECTORS.addButton).click();
 
-    cy.get('[class*=circle_content]').first()
-      .find('[class*=circle_changing]');
+    cy.get(CSS_SELECTORS.circle).first()
+      .find(CSS_SELECTORS.circleChangingState);
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]')
+    cy.get(CSS_SELECTORS.circle)
       .should('have.length', QUEUE_LEN)
       .each((el, index) => {
         if (index === 0) {
-          cy.wrap(el).get('[class*=circle_letter]').contains('1');
-          cy.wrap(el).get('[class*=circle_head]').should('contain.text', 'head');
-          cy.wrap(el).get('[class*=circle_tail]').should('contain.text', 'tail');
-          cy.wrap(el).find('[class*=circle_changing]');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('1');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('contain.text', BASIC_LABELS.headText);
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('contain.text', BASIC_LABELS.tailText);
+          cy.wrap(el).find(CSS_SELECTORS.circleChangingState);
         }
       });
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]')
+    cy.get(CSS_SELECTORS.circle)
       .should('have.length', QUEUE_LEN)
       .each((el, index) => {
         if (index === 0) {
-          cy.wrap(el).get('[class*=circle_letter]').contains('1');
-          cy.wrap(el).get('[class*=circle_head]').should('contain.text', 'head');
-          cy.wrap(el).get('[class*=circle_tail]').should('contain.text', 'tail');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('1');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('contain.text', BASIC_LABELS.headText);
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('contain.text', BASIC_LABELS.tailText);
         }
         else {
-          cy.wrap(el).get('[class*=circle_letter]').should('be.empty');
-          cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-          cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
           
         }
-        cy.wrap(el).find('[class*=circle_default]');  
+        cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);  
       });
 
-    cy.get('input').should('have.value', '');
-    cy.get('button[name="delete"]').should('be.enabled');
-    cy.get('button[name="clear"]').should('be.enabled');
+    cy.get(CSS_SELECTORS.singleInput).should('have.value', '');
+    cy.get(CSS_SELECTORS.deleteButton).should('be.enabled');
+    cy.get(CSS_SELECTORS.clearButton).should('be.enabled');
 
     // Add second element to queue
-    cy.get('input').type('2').should('have.value', '2');
-    cy.get('button[name="add"]').click();
+    cy.get(CSS_SELECTORS.singleInput).type('2').should('have.value', '2');
+    cy.get(CSS_SELECTORS.addButton).click();
 
-    cy.get('[class*=circle_content]').first()
-      .find('[class*=circle_default]');
+    cy.get(CSS_SELECTORS.circle).first()
+      .find(CSS_SELECTORS.circleDefaultState);
 
-      cy.get('[class*=circle_content]').eq(1)
-      .find('[class*=circle_changing]');
+      cy.get(CSS_SELECTORS.circle).eq(1)
+      .find(CSS_SELECTORS.circleChangingState);
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]').eq(1)
+    cy.get(CSS_SELECTORS.circle).eq(1)
       .contains('2');
-    cy.get('[class*=circle_content]').eq(1)
-      .get('[class*=circle_head]').should('be.empty');
-    cy.get('[class*=circle_content]').eq(1)
-      .get('[class*=circle_tail]').should('contain.text', 'tail');
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .get(CSS_SELECTORS.circleHead).should('be.empty');
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .get(CSS_SELECTORS.circleTail).should('contain.text', BASIC_LABELS.tailText);
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]')
+    cy.get(CSS_SELECTORS.circle)
     .should('have.length', QUEUE_LEN)
     .each((el, index) => {
       if (index === 0) {
-        cy.wrap(el).get('[class*=circle_letter]').contains('1');
-        cy.wrap(el).get('[class*=circle_head]').should('contain.text', 'head');
-        cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('1');
+        cy.wrap(el).get(CSS_SELECTORS.circleHead).should('contain.text', BASIC_LABELS.headText);
+        cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
       }
 
       if(index === 1) {
-        cy.wrap(el).get('[class*=circle_letter]').contains('2');
-        cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-        cy.wrap(el).get('[class*=circle_tail]').should('contain.text', 'tail');
+        cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('2');
+        cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleTail).should('contain.text', BASIC_LABELS.tailText);
       }
 
       if(index > 1) {
-        cy.wrap(el).get('[class*=circle_letter]').should('be.empty');
-        cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-        cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleLetter).should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
       }
 
-      cy.wrap(el).find('[class*=circle_default]');  
+      cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);  
     });
 
-    cy.get('input').should('have.value', '');
-    cy.get('button[name="delete"]').should('be.enabled');
-    cy.get('button[name="clear"]').should('be.enabled');
+    cy.get(CSS_SELECTORS.singleInput).should('have.value', '');
+    cy.get(CSS_SELECTORS.deleteButton).should('be.enabled');
+    cy.get(CSS_SELECTORS.clearButton).should('be.enabled');
 
     // Add third element to queue
-    cy.get('input').type('3').should('have.value', '3');
-    cy.get('button[name="add"]').click();
+    cy.get(CSS_SELECTORS.singleInput).type('3').should('have.value', '3');
+    cy.get(CSS_SELECTORS.addButton).click();
 
-    cy.get('[class*=circle_content]').first()
-      .find('[class*=circle_default]');
+    cy.get(CSS_SELECTORS.circle).first()
+      .find(CSS_SELECTORS.circleDefaultState);
 
-    cy.get('[class*=circle_content]').eq(1)
-      .find('[class*=circle_default]');
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .find(CSS_SELECTORS.circleDefaultState);
 
-    cy.get('[class*=circle_content]').eq(2)
-      .find('[class*=circle_changing]');
+    cy.get(CSS_SELECTORS.circle).eq(2)
+      .find(CSS_SELECTORS.circleChangingState);
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]').eq(2)
+    cy.get(CSS_SELECTORS.circle).eq(2)
       .contains('3');
-    cy.get('[class*=circle_content]').eq(1)
-      .get('[class*=circle_head]').should('be.empty');
-    cy.get('[class*=circle_content]').eq(2)
-      .get('[class*=circle_head]').should('be.empty');
-    cy.get('[class*=circle_content]').eq(1)
-      .get('[class*=circle_tail]').should('be.empty');
-    cy.get('[class*=circle_content]').eq(2)
-      .get('[class*=circle_tail]').should('contain.text', 'tail');
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .get(CSS_SELECTORS.circleHead).should('be.empty');
+    cy.get(CSS_SELECTORS.circle).eq(2)
+      .get(CSS_SELECTORS.circleHead).should('be.empty');
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .get(CSS_SELECTORS.circleTail).should('be.empty');
+    cy.get(CSS_SELECTORS.circle).eq(2)
+      .get(CSS_SELECTORS.circleTail).should('contain.text', BASIC_LABELS.tailText);
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]')
+    cy.get(CSS_SELECTORS.circle)
       .should('have.length', QUEUE_LEN)
       .each((el, index) => {
         if (index === 0) {
-          cy.wrap(el).get('[class*=circle_letter]').contains('1');
-          cy.wrap(el).get('[class*=circle_head]').should('contain.text', 'head');
-          cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('1');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('contain.text', BASIC_LABELS.headText);
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
         }
 
         if (index === 2) {
-          cy.wrap(el).get('[class*=circle_letter]').contains('2');
-          cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-          cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('2');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
         }
 
         if(index === 2) {
-          cy.wrap(el).get('[class*=circle_letter]').contains('3');
-          cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-          cy.wrap(el).get('[class*=circle_tail]').should('contain.text', 'tail');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).contains('3');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('contain.text', BASIC_LABELS.tailText);
         }
 
         if(index > 2) {
-          cy.wrap(el).get('[class*=circle_letter]').should('be.empty');
-          cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-          cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleLetter).should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+          cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
         }
 
-        cy.wrap(el).find('[class*=circle_default]');  
+        cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);  
       });
   });
 
   it('Should have correct visualization during elements deleting', () => {
-    cy.get('button[name="delete"]').click();
+    cy.get(CSS_SELECTORS.deleteButton).click();
 
-    cy.get('[class*=circle_content]').first()
-      .find('[class*=circle_changing]');
-
-    cy.wait(SHORT_DELAY_IN_MS);
-
-    cy.get('[class*=circle_content]').first()
-      .find('[class*=circle_default]');
-
-    cy.get('[class*=circle_content]').first()
-      .get('[class*=circle_letter]').should('be.empty');
-
-    cy.get('[class*=circle_content]').first()
-      .get('[class*=circle_head]').should('be.empty');
-
-    cy.get('[class*=circle_content]').eq(1)
-      .find('[class*=circle_changing]');
-
-    cy.get('[class*=circle_content]').eq(1)
-      .get('[class*=circle_head]').should('contain.text', 'head');
+    cy.get(CSS_SELECTORS.circle).first()
+      .find(CSS_SELECTORS.circleChangingState);
 
     cy.wait(SHORT_DELAY_IN_MS);
 
-    cy.get('[class*=circle_content]').eq(1)
-      .find('[class*=circle_default]');
+    cy.get(CSS_SELECTORS.circle).first()
+      .find(CSS_SELECTORS.circleDefaultState);
+
+    cy.get(CSS_SELECTORS.circle).first()
+      .get(CSS_SELECTORS.circleLetter).should('be.empty');
+
+    cy.get(CSS_SELECTORS.circle).first()
+      .get(CSS_SELECTORS.circleHead).should('be.empty');
+
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .find(CSS_SELECTORS.circleChangingState);
+
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .get(CSS_SELECTORS.circleHead).should('contain.text', BASIC_LABELS.headText);
+
+    cy.wait(SHORT_DELAY_IN_MS);
+
+    cy.get(CSS_SELECTORS.circle).eq(1)
+      .find(CSS_SELECTORS.circleDefaultState);
   });
 
   it('Should have correct range clearing', () => {
-    cy.get('button[name="clear"]').click();
+    cy.get(CSS_SELECTORS.clearButton).click();
 
-    cy.get('[class*=circle_content]')
+    cy.get(CSS_SELECTORS.circle)
       .should('have.length', QUEUE_LEN)
       .each((el, index) => {
-        cy.wrap(el).get('[class*=circle_letter]').should('be.empty');
-        cy.wrap(el).get('[class*=circle_head]').should('be.empty');
-        cy.wrap(el).get('[class*=circle_tail]').should('be.empty');
-        cy.wrap(el).find('[class*=circle_default]');  
+        cy.wrap(el).get(CSS_SELECTORS.circleLetter).should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleHead).should('be.empty');
+        cy.wrap(el).get(CSS_SELECTORS.circleTail).should('be.empty');
+        cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);  
       });
 
-    cy.get('button[name="delete"]').should('be.disabled');
-    cy.get('button[name="clear"]').should('be.disabled');
+    cy.get(CSS_SELECTORS.deleteButton).should('be.disabled');
+    cy.get(CSS_SELECTORS.clearButton).should('be.disabled');
   });
 });
 

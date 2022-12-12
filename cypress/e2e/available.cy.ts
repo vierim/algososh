@@ -1,5 +1,5 @@
-describe('Базовые тесты приложения', () => {
-  it('Application should be successfully started', () => {
+describe('Basic application test', () => {
+  it('Should be successfully started', () => {
     cy.visit('/');
   });
 })

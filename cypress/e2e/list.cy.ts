@@ -1,3 +1,4 @@
+import { CSS_SELECTORS, BASIC_LABELS, STATE_COLORS } from './e2e-constants';
 import { MIN_LIST_LEN, MAX_LIST_LEN, DELAY_IN_MS } from '../../src/constants';
 
 describe('Page with data structure "LinkedList" is testing', () => {
@@ -6,20 +7,20 @@ describe('Page with data structure "LinkedList" is testing', () => {
   });
 
   it('Buttons should be disabled', () => {
-    cy.get('input[name=value]').should('be.empty');
-    cy.get('input[name=index]').should('be.empty');
+    cy.get(CSS_SELECTORS.valueInput).should('be.empty');
+    cy.get(CSS_SELECTORS.indexInput).should('be.empty');
 
-    cy.get('button[name=addToHeadButton]').should('be.disabled');
-    cy.get('button[name=addToTailButton]').should('be.disabled');
+    cy.get(CSS_SELECTORS.addToHeadButton).should('be.disabled');
+    cy.get(CSS_SELECTORS.addToTailButton).should('be.disabled');
 
-    cy.get('button[name=addByIndexButton]').should('be.disabled');
-    cy.get('button[name=deleteByIndexButton]').should('be.disabled');
+    cy.get(CSS_SELECTORS.addByIndexButton).should('be.disabled');
+    cy.get(CSS_SELECTORS.deleteByIndexButton).should('be.disabled');
   });
 
   it('Should render default LinkedList with random values', () => {
     let list: JQuery<HTMLElement>[] = [];
 
-    cy.get('[class*=circle_content]').as('circles');
+    cy.get(CSS_SELECTORS.circle).as('circles');
 
     cy.get('@circles')
       .its('length')
@@ -31,19 +32,21 @@ describe('Page with data structure "LinkedList" is testing', () => {
     });
 
     cy.get('@circles').each((el, index) => {
-      cy.wrap(el).find('[class*=circle_default]');
-      cy.wrap(el).find('[class*=circle_letter]').should('not.be.empty');
+      cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
+      cy.wrap(el).find(CSS_SELECTORS.circleLetter).should('not.be.empty');
     });
 
     cy.get('@circles').each((el, index) => {
       console.log(list.length);
       if (index === 0) {
-        cy.wrap(el).find('[class*=circle_head]').should('contain.text', 'head');
+        cy.wrap(el).find(CSS_SELECTORS.circleHead)
+          .should('contain.text', BASIC_LABELS.headText);
       } else if (index === list.length - 1) {
-        cy.wrap(el).find('[class*=circle_tail]').should('contain.text', 'tail');
+        cy.wrap(el).find(CSS_SELECTORS.circleTail)
+          .should('contain.text', BASIC_LABELS.tailText);
       } else {
-        cy.wrap(el).find('[class*=circle_head]').should('be.empty');
-        cy.wrap(el).find('[class*=circle_tail]').should('be.empty');
+        cy.wrap(el).find(CSS_SELECTORS.circleHead).should('be.empty');
+        cy.wrap(el).find(CSS_SELECTORS.circleTail).should('be.empty');
       }
     });
   });
@@ -53,7 +56,7 @@ describe('Page with data structure "LinkedList" is testing', () => {
     const newElement = '333';
     let len = 0;
 
-    cy.get('[class*=circle_content]').as('circles');
+    cy.get(CSS_SELECTORS.circle).as('circles');
 
     cy.get('@circles')
       .each(($el) => {
@@ -62,19 +65,19 @@ describe('Page with data structure "LinkedList" is testing', () => {
       .then((elements) => {
         len = elements.length + 1;
 
-        cy.get('input[name=value]')
+        cy.get(CSS_SELECTORS.valueInput)
           .type(newElement)
           .should('have.value', newElement);
-        cy.get('button[name=addToHeadButton]').should('be.enabled');
-        cy.get('button[name=addToHeadButton]').click();
+        cy.get(CSS_SELECTORS.addToHeadButton).should('be.enabled');
+        cy.get(CSS_SELECTORS.addToHeadButton).click();
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_head]')
+          .find(CSS_SELECTORS.circleHead)
           .should('be.empty');
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_small]')
+          .find(CSS_SELECTORS.smallCircle)
           .as('smallCircle');
 
         cy.get('@smallCircle').should(($div) => {
@@ -84,23 +87,23 @@ describe('Page with data structure "LinkedList" is testing', () => {
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').should('have.length', len);
+        cy.get(CSS_SELECTORS.circle).should('have.length', len);
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_modified]');
-        cy.get('[class*=circle_content]')
+          .find(CSS_SELECTORS.circleModifiedState);
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_head]')
-          .should('contain.text', 'head');
-        cy.get('[class*=circle_content]')
+          .find(CSS_SELECTORS.circleHead)
+          .should('contain.text', BASIC_LABELS.headText);
+        cy.get(CSS_SELECTORS.circle)
           .first()
           .should('contain.text', newElement);
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').each((el) => {
-          cy.wrap(el).find('[class*=circle_default]');
+        cy.get(CSS_SELECTORS.circle).each((el) => {
+          cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
         });
       });
   });
@@ -110,7 +113,7 @@ describe('Page with data structure "LinkedList" is testing', () => {
     const newElement = '444';
     let len = 0;
 
-    cy.get('[class*=circle_content]').as('circles');
+    cy.get(CSS_SELECTORS.circle).as('circles');
 
     cy.get('@circles')
       .each(($el) => {
@@ -119,19 +122,19 @@ describe('Page with data structure "LinkedList" is testing', () => {
       .then((elements) => {
         len = elements.length + 1;
 
-        cy.get('input[name=value]')
+        cy.get(CSS_SELECTORS.valueInput)
           .type(newElement)
           .should('have.value', newElement);
-        cy.get('button[name=addToTailButton]').should('be.enabled');
-        cy.get('button[name=addToTailButton]').click();
+        cy.get(CSS_SELECTORS.addToTailButton).should('be.enabled');
+        cy.get(CSS_SELECTORS.addToTailButton).click();
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .last()
-          .find('[class*=circle_head]')
+          .find(CSS_SELECTORS.circleHead)
           .should('be.empty');
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .last()
-          .find('[class*=circle_small]')
+          .find(CSS_SELECTORS.smallCircle)
           .as('smallCircle');
 
         cy.get('@smallCircle').should(($div) => {
@@ -141,23 +144,23 @@ describe('Page with data structure "LinkedList" is testing', () => {
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').should('have.length', len);
+        cy.get(CSS_SELECTORS.circle).should('have.length', len);
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .last()
-          .find('[class*=circle_modified]');
-        cy.get('[class*=circle_content]')
+          .find(CSS_SELECTORS.circleModifiedState);
+        cy.get(CSS_SELECTORS.circle)
           .last()
-          .find('[class*=circle_tail]')
-          .should('contain.text', 'tail');
-        cy.get('[class*=circle_content]')
+          .find(CSS_SELECTORS.circleTail)
+          .should('contain.text', BASIC_LABELS.tailText);
+        cy.get(CSS_SELECTORS.circle)
           .last()
           .should('contain.text', newElement);
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').each((el) => {
-          cy.wrap(el).find('[class*=circle_default]');
+        cy.get(CSS_SELECTORS.circle).each((el) => {
+          cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
         });
       });
   });
@@ -168,7 +171,7 @@ describe('Page with data structure "LinkedList" is testing', () => {
     const addingPositionIndex = 1;
     let newListLength = 0;
 
-    cy.get('[class*=circle_content]').as('originalCircles');
+    cy.get(CSS_SELECTORS.circle).as('originalCircles');
 
     cy.get('@originalCircles')
       .each(($el) => {
@@ -177,80 +180,80 @@ describe('Page with data structure "LinkedList" is testing', () => {
       .then((elements) => {
         newListLength = elements.length + 1;
 
-        cy.get('input[name=value]')
+        cy.get(CSS_SELECTORS.valueInput)
           .type(newListElement)
           .should('have.value', newListElement);
-        cy.get('input[name=index]')
+        cy.get(CSS_SELECTORS.indexInput)
           .type(addingPositionIndex.toString())
           .should('have.value', addingPositionIndex.toString());
-        cy.get('button[name=addByIndexButton]').should('be.enabled');
-        cy.get('button[name=addByIndexButton]').click();
+        cy.get(CSS_SELECTORS.addByIndexButton).should('be.enabled');
+        cy.get(CSS_SELECTORS.addByIndexButton).click();
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_changing]');
+          .find(CSS_SELECTORS.circleChangingState);
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').as('circles');
-        cy.get('@circles').first().find('[class*=circle_changing]');
-        cy.get('@circles').eq(1).find('[class*=circle_changing]');
+        cy.get(CSS_SELECTORS.circle).as('circles');
+        cy.get('@circles').first().find(CSS_SELECTORS.circleChangingState);
+        cy.get('@circles').eq(1).find(CSS_SELECTORS.circleChangingState);
 
-        cy.get('[class*=list_item]')
+        cy.get(CSS_SELECTORS.listItem)
           .first()
           .find('svg')
           .find('path')
-          .should('have.attr', 'fill', '#d252e1');
+          .should('have.attr', 'fill', STATE_COLORS.modified);
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').as('circles');
-        cy.get('@circles').first().find('[class*=circle_changing]');
-        cy.get('@circles').eq(1).find('[class*=circle_changing]');
+        cy.get(CSS_SELECTORS.circle).as('circles');
+        cy.get('@circles').first().find(CSS_SELECTORS.circleChangingState);
+        cy.get('@circles').eq(1).find(CSS_SELECTORS.circleChangingState);
         cy.get('@circles')
           .eq(1)
-          .find('[class*=circle_small]')
+          .find(CSS_SELECTORS.smallCircle)
           .as('smallCircle');
         cy.get('@smallCircle').should(($div) => {
           expect($div[0].className).to.match(/circle_changing/gm);
         });
         cy.get('@smallCircle').should('contain.text', newListElement);
-        cy.get('[class*=list_item]')
+        cy.get(CSS_SELECTORS.listItem)
           .first()
           .find('svg')
           .find('path')
-          .should('have.attr', 'fill', '#d252e1');
+          .should('have.attr', 'fill', STATE_COLORS.modified);
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').each((el, index) => {
+        cy.get(CSS_SELECTORS.circle).each((el, index) => {
           if (index === 0) {
-            cy.wrap(el).find('[class*=circle_changing]');
+            cy.wrap(el).find(CSS_SELECTORS.circleChangingState);
           }
 
           if (index === 1) {
             cy.wrap(el).should('contain.text', newListElement);
-            cy.wrap(el).find('[class*=circle_modified]');
+            cy.wrap(el).find(CSS_SELECTORS.circleModifiedState);
           }
 
           if (index > 1) {
-            cy.wrap(el).find('[class*=circle_default]');
+            cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
           }
         });
-        cy.get('[class*=list_item]')
+        cy.get(CSS_SELECTORS.listItem)
           .first()
           .find('svg')
           .find('path')
-          .should('have.attr', 'fill', '#d252e1');
+          .should('have.attr', 'fill', STATE_COLORS.modified);
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').should('have.length', newListLength);
-        cy.get('[class*=circle_content]').each((el) => {
-          cy.wrap(el).find('[class*=circle_default]');
+        cy.get(CSS_SELECTORS.circle).should('have.length', newListLength);
+        cy.get(CSS_SELECTORS.circle).each((el) => {
+          cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
         });
-        cy.get('[class*=list_item]').each((el, index) => {
+        cy.get(CSS_SELECTORS.listItem).each((el, index) => {
           if (index < newListLength - 1) {
             cy.wrap(el)
               .find('svg')
               .find('path')
-              .should('have.attr', 'fill', '#0032FF');
+              .should('have.attr', 'fill', STATE_COLORS.default);
           }
         });
       });
@@ -260,7 +263,7 @@ describe('Page with data structure "LinkedList" is testing', () => {
     const originalList: JQuery<HTMLElement>[] = [];
     let newListLength = 0;
 
-    cy.get('[class*=circle_content]').as('circles');
+    cy.get(CSS_SELECTORS.circle).as('circles');
 
     cy.get('@circles')
       .each(($el) => {
@@ -269,33 +272,33 @@ describe('Page with data structure "LinkedList" is testing', () => {
       .then((elements) => {
         newListLength = elements.length - 1;
 
-        cy.get('button[name=deleteFromHeadButton]').click();
+        cy.get(CSS_SELECTORS.deleteFromHeadButton).click();
 
         cy.get('@circles')
           .first()
-          .find('[class*=circle_letter]')
+          .find(CSS_SELECTORS.circleLetter)
           .should('be.empty');
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_small]')
+          .find(CSS_SELECTORS.smallCircle)
           .as('smallCircle');
 
         cy.get('@smallCircle').should(($div) => {
           expect($div[0].className).to.match(/circle_changing/gm);
         });
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_head]')
-          .should('contain.text', 'head');
+          .find(CSS_SELECTORS.circleHead)
+          .should('contain.text', BASIC_LABELS.headText);
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').should('have.length', newListLength);
+        cy.get(CSS_SELECTORS.circle).should('have.length', newListLength);
 
-        cy.get('[class*=circle_content]').each((el) => {
-          cy.wrap(el).find('[class*=circle_default]');
+        cy.get(CSS_SELECTORS.circle).each((el) => {
+          cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
         });
       });
   });
@@ -304,7 +307,7 @@ describe('Page with data structure "LinkedList" is testing', () => {
     const originalList: JQuery<HTMLElement>[] = [];
     let newListLength = 0;
 
-    cy.get('[class*=circle_content]').as('circles');
+    cy.get(CSS_SELECTORS.circle).as('circles');
 
     cy.get('@circles')
       .each(($el) => {
@@ -313,21 +316,21 @@ describe('Page with data structure "LinkedList" is testing', () => {
       .then((elements) => {
         newListLength = elements.length - 1;
 
-        cy.get('button[name=deleteFromTailButton]').click();
+        cy.get(CSS_SELECTORS.deleteFromTailButton).click();
 
         cy.get('@circles')
           .last()
-          .find('[class*=circle_letter]')
+          .find(CSS_SELECTORS.circleLetter)
           .should('be.empty');
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .last()
-          .find('[class*=circle_tail]')
-          .should('not.contain.text', 'tail');
+          .find(CSS_SELECTORS.circleTail)
+          .should('not.contain.text', BASIC_LABELS.tailText);
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .last()
-          .find('[class*=circle_small]')
+          .find(CSS_SELECTORS.smallCircle)
           .as('smallCircle');
 
         cy.get('@smallCircle').should(($div) => {
@@ -336,10 +339,10 @@ describe('Page with data structure "LinkedList" is testing', () => {
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').should('have.length', newListLength);
+        cy.get(CSS_SELECTORS.circle).should('have.length', newListLength);
 
-        cy.get('[class*=circle_content]').each((el) => {
-          cy.wrap(el).find('[class*=circle_default]');
+        cy.get(CSS_SELECTORS.circle).each((el) => {
+          cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
         });
       });
   });
@@ -349,7 +352,7 @@ describe('Page with data structure "LinkedList" is testing', () => {
     const deletingPositionIndex = 1;
     let newListLength = 0;
 
-    cy.get('[class*=circle_content]').as('originalCircles');
+    cy.get(CSS_SELECTORS.circle).as('originalCircles');
 
     cy.get('@originalCircles')
       .each(($el) => {
@@ -358,45 +361,45 @@ describe('Page with data structure "LinkedList" is testing', () => {
       .then((elements) => {
         newListLength = elements.length - 1;
 
-        cy.get('input[name=index]')
+        cy.get(CSS_SELECTORS.indexInput)
           .type(deletingPositionIndex.toString())
           .should('have.value', deletingPositionIndex.toString());
-        cy.get('button[name=deleteByIndexButton]').should('be.enabled');
-        cy.get('button[name=deleteByIndexButton]').click();
+        cy.get(CSS_SELECTORS.deleteByIndexButton).should('be.enabled');
+        cy.get(CSS_SELECTORS.deleteByIndexButton).click();
 
-        cy.get('[class*=circle_content]')
+        cy.get(CSS_SELECTORS.circle)
           .first()
-          .find('[class*=circle_changing]');
+          .find(CSS_SELECTORS.circleChangingState);
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').as('circles');
-        cy.get('@circles').first().find('[class*=circle_changing]');
-        cy.get('@circles').eq(1).find('[class*=circle_changing]');
+        cy.get(CSS_SELECTORS.circle).as('circles');
+        cy.get('@circles').first().find(CSS_SELECTORS.circleChangingState);
+        cy.get('@circles').eq(1).find(CSS_SELECTORS.circleChangingState);
 
-        cy.get('[class*=list_item]')
+        cy.get(CSS_SELECTORS.listItem)
           .first()
           .find('svg')
           .find('path')
-          .should('have.attr', 'fill', '#d252e1');
+          .should('have.attr', 'fill', STATE_COLORS.modified);
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').as('circles');
-        cy.get('@circles').first().find('[class*=circle_changing]');
-        cy.get('@circles').eq(1).find('[class*=circle_changing]');
+        cy.get(CSS_SELECTORS.circle).as('circles');
+        cy.get('@circles').first().find(CSS_SELECTORS.circleChangingState);
+        cy.get('@circles').eq(1).find(CSS_SELECTORS.circleChangingState);
         cy.get('@circles')
           .eq(1)
-          .find('[class*=circle_letter]')
+          .find(CSS_SELECTORS.circleLetter)
           .should('be.empty');
 
-        cy.get('[class*=list_item]')
+        cy.get(CSS_SELECTORS.listItem)
           .first()
           .find('svg')
           .find('path')
-          .should('have.attr', 'fill', '#d252e1');
+          .should('have.attr', 'fill', STATE_COLORS.modified);
 
         cy.get('@circles')
           .eq(1)
-          .find('[class*=circle_small]')
+          .find(CSS_SELECTORS.smallCircle)
           .as('smallCircle');
         cy.get('@smallCircle').should(($div) => {
           expect($div[0].className).to.match(/circle_changing/gm);
@@ -404,16 +407,16 @@ describe('Page with data structure "LinkedList" is testing', () => {
 
         cy.wait(DELAY_IN_MS);
 
-        cy.get('[class*=circle_content]').should('have.length', newListLength);
-        cy.get('[class*=circle_content]').each((el) => {
-          cy.wrap(el).find('[class*=circle_default]');
+        cy.get(CSS_SELECTORS.circle).should('have.length', newListLength);
+        cy.get(CSS_SELECTORS.circle).each((el) => {
+          cy.wrap(el).find(CSS_SELECTORS.circleDefaultState);
         });
-        cy.get('[class*=list_item]').each((el, index) => {
+        cy.get(CSS_SELECTORS.listItem).each((el, index) => {
           if (index < newListLength - 1) {
             cy.wrap(el)
               .find('svg')
               .find('path')
-              .should('have.attr', 'fill', '#0032FF');
+              .should('have.attr', 'fill', STATE_COLORS.default);
           }
         });
       });

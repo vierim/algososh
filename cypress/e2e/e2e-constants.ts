@@ -1,7 +1,7 @@
 export const CSS_SELECTORS = {
   // inputs
   singleInput: 'input',
-  valueInput: 'input[name=value]',
+  valueInput: 'input[name=chars]',
   indexInput: 'input[name=index]',
   // buttons
   submitButton: 'button[type=submit]',

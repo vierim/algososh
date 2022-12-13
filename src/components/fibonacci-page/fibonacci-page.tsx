@@ -15,8 +15,13 @@ export const FibonacciPage: FC = () => {
   const fibonacciNumbers = useRef<number[]>([]);
   const timerId = useRef<NodeJS.Timeout>();
 
-  const { values, handleChange } = useForm({ value: '0' });
-  const value = values['value'];
+  const { values, handleChange } = useForm({
+    searchedNumber: {
+      value: '0',
+      onlyDigits: true
+    } 
+  });
+  const searchedNumber = values['searchedNumber'].value;
 
   const [loader, setLoader] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
@@ -39,7 +44,7 @@ export const FibonacciPage: FC = () => {
   const handleClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
-    fibonacciNumbers.current = getFibonacciNumbers(Number.parseInt(value));
+    fibonacciNumbers.current = getFibonacciNumbers(Number.parseInt(searchedNumber));
     setStep(0);
     setLoader(true);
 
@@ -61,8 +66,8 @@ export const FibonacciPage: FC = () => {
           type={'number'}
           max={19}
           isLimitText={true}
-          value={value}
-          name={'value'}
+          value={searchedNumber}
+          name={'searchedNumber'}
           onChange={handleChange}
           disabled={loader}
         />
@@ -71,9 +76,9 @@ export const FibonacciPage: FC = () => {
           text={'Рассчитать'}
           onClick={handleClick}
           disabled={
-            value === '' ||
-            Number.parseInt(value) < 1 ||
-            Number.parseInt(value) > 19
+            searchedNumber === '' ||
+            Number.parseInt(searchedNumber) < 1 ||
+            Number.parseInt(searchedNumber) > 19
           }
           isLoader={loader}
         />

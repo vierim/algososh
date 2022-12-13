@@ -18,8 +18,10 @@ import styles from './queue.module.css';
 export const QueuePage: FC = () => {
   const queue = useRef(new Queue(QUEUE_LEN));
 
-  const { values, handleChange, clearValue } = useForm({ value: '' });
-  const value = values['value'];
+  const { values, handleChange, clearValue } = useForm({
+    chars: { value: '' },
+  });
+  const value = values['chars'].value;
 
   const [result, setResult] = useState<(string | null)[]>(
     new Array(QUEUE_LEN).fill(null)
@@ -36,12 +38,10 @@ export const QueuePage: FC = () => {
 
   const showIncreaseQueue = async () => {
     const currentValue = value;
-    clearValue('value');
+    clearValue('chars');
 
     setInstant(
-      queue.current.isEmpty
-        ? queue.current.tail
-        : queue.current.tail + 1
+      queue.current.isEmpty ? queue.current.tail : queue.current.tail + 1
     );
     await setDelay(SHORT_DELAY_IN_MS);
 
@@ -83,7 +83,7 @@ export const QueuePage: FC = () => {
   };
 
   const handleCleanClick = () => {
-    clearValue('value');
+    clearValue('chars');
     queue.current.clear();
     showDataFromQueue();
   };
@@ -97,7 +97,7 @@ export const QueuePage: FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
-            name={'value'}
+            name={'chars'}
             onChange={handleChange}
             disabled={loader}
           />
@@ -131,8 +131,7 @@ export const QueuePage: FC = () => {
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={
-            loader ||
-            (queue.current.tail === 0 && queue.current.length === 0)
+            loader || (queue.current.tail === 0 && queue.current.length === 0)
           }
         />
       </form>
@@ -145,8 +144,7 @@ export const QueuePage: FC = () => {
 
             let isEmpty = queue.current.isEmpty;
             let nullablePosition =
-              queue.current.head === 0 &&
-              queue.current.tail === 0;
+              queue.current.head === 0 && queue.current.tail === 0;
 
             if (isEmpty && nullablePosition) {
               isHead = false;

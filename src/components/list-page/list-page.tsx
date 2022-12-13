@@ -36,12 +36,17 @@ export const ListPage: React.FC = () => {
   );
 
   const { values, handleChange, clearValue } = useForm({
-    value: '',
-    index: '',
+    chars: {
+      value: ''
+    },
+    index: {
+      value: '',
+      onlyDigits: true
+    }
   });
 
-  const value = values['value'];
-  const index = values['index'];
+  const chars = values['chars'].value;
+  const index = values['index'].value;
 
   const [result, setResult] = useState<string[]>([]);
 
@@ -69,11 +74,11 @@ export const ListPage: React.FC = () => {
     setLoader(true);
     setAction(Actions.AddToHead);
 
-    linkedList.current.prepend(value);
+    linkedList.current.prepend(chars);
 
     if (result.length > 0) {
-      setCurrentElement(value);
-      clearValue('value');
+      setCurrentElement(chars);
+      clearValue('chars');
 
       setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(0);
@@ -87,7 +92,7 @@ export const ListPage: React.FC = () => {
       setModifiedIndex(-1);
       setSmallCirclePosition(undefined);
     } else {
-      clearValue('value');
+      clearValue('chars');
       showCurrentResult();
       setModifiedIndex(0);
 
@@ -103,11 +108,11 @@ export const ListPage: React.FC = () => {
     setLoader(true);
     setAction(Actions.AddToTail);
 
-    linkedList.current.append(value);
+    linkedList.current.append(chars);
 
     if (result.length > 0) {
-      setCurrentElement(value);
-      clearValue('value');
+      setCurrentElement(chars);
+      clearValue('chars');
 
       setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(linkedList.current.listSize - 2);
@@ -121,7 +126,7 @@ export const ListPage: React.FC = () => {
       setModifiedIndex(-1);
       setSmallCirclePosition(undefined);
     } else {
-      clearValue('value');
+      clearValue('chars');
       showCurrentResult();
       setModifiedIndex(0);
 
@@ -187,10 +192,10 @@ export const ListPage: React.FC = () => {
 
     setSmallCirclePosition(Positions.Top);
     setSmallCircleIndex(Number.parseInt(index));
-    setCurrentElement(value);
+    setCurrentElement(chars);
     await setDelay(DELAY_IN_MS);
 
-    linkedList.current.addByIndex(value, Number.parseInt(index));
+    linkedList.current.addByIndex(chars, Number.parseInt(index));
 
     setSmallCircleIndex(-1);
     setModifiedIndex(Number.parseInt(index));
@@ -202,7 +207,7 @@ export const ListPage: React.FC = () => {
     setChangingIndex(-1);
     setSmallCirclePosition(undefined);
 
-    clearValue('value');
+    clearValue('chars');
     clearValue('index');
 
     setLoader(false);
@@ -246,7 +251,7 @@ export const ListPage: React.FC = () => {
 
   const isCorrectAddByIndex = (): boolean | undefined => {
     return !(
-      value.length !== 0 &&
+      chars.length !== 0 &&
       Number.parseInt(index) > -1 &&
       Number.parseInt(index) < linkedList.current.listSize
     );
@@ -287,11 +292,11 @@ export const ListPage: React.FC = () => {
         <fieldset className={styles.form__group}>
           <Input
             type={'text'}
-            placeholder={'Введите значение'}
+            name={'chars'}
+            value={chars}
             maxLength={4}
             isLimitText={true}
-            value={value}
-            name={'value'}
+            placeholder={'Введите значение'}
             onChange={handleChange}
             disabled={loader}
           />
@@ -303,7 +308,7 @@ export const ListPage: React.FC = () => {
             onClick={handleAddHeadClick}
             isLoader={loader && action === Actions.AddToHead}
             disabled={
-              (loader && action !== Actions.AddToHead) || value.length === 0
+              (loader && action !== Actions.AddToHead) || chars.length === 0
             }
           />
           <Button
@@ -314,7 +319,7 @@ export const ListPage: React.FC = () => {
             onClick={handleAddTailClick}
             isLoader={loader && action === Actions.AddToTail}
             disabled={
-              (loader && action !== Actions.AddToTail) || value.length === 0
+              (loader && action !== Actions.AddToTail) || chars.length === 0
             }
           />
           <Button

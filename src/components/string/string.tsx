@@ -17,8 +17,10 @@ export const StringComponent: FC = () => {
   const rangeRef = useRef(new ReverseRange<string>());
   const timerId = useRef<NodeJS.Timeout>();
 
-  const { values, handleChange, clearValue } = useForm({ range: '' });
-  const range = values['range'];
+  const { values, handleChange, clearValue } = useForm({
+    range: { value: '' },
+  });
+  const range = values['range'].value;
 
   const [result, setResult] = useState<TReverseRangeResult>([]);
   const [loader, setLoader] = useState<boolean>(false);

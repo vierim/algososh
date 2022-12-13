@@ -19,8 +19,10 @@ import { ScrollRow } from '../ui/scroll-row/scroll-row';
 export const StackPage: FC = () => {
   const stackRef = useRef(new Stack());
 
-  const { values, handleChange, clearValue } = useForm({ value: '' });
-  const value = values['value'];
+  const { values, handleChange, clearValue } = useForm({
+    chars: { value: '' },
+  });
+  const value = values['chars'].value;
 
   const [result, setResult] = useState<string[]>([]);
   const [action, setAction] = useState<Actions>(Actions.Waiting);
@@ -38,7 +40,7 @@ export const StackPage: FC = () => {
 
     setInstant(stackRef.current.lastIndex);
     setAction(Actions.AddToTail);
-    clearValue('value');
+    clearValue('chars');
 
     showDataFromStack();
     await setDelay(DELAY_IN_MS);
@@ -64,7 +66,7 @@ export const StackPage: FC = () => {
   };
 
   const handleCleanClick = () => {
-    clearValue('value');
+    clearValue('chars');
     stackRef.current.clear();
     showDataFromStack();
   };
@@ -78,7 +80,7 @@ export const StackPage: FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
-            name={'value'}
+            name={'chars'}
             onChange={handleChange}
             disabled={loader}
           />

@@ -1,8 +1,7 @@
 import { FC, useState, useRef } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-import { QUEUE_LEN } from '../../constants/queue';
+import { SHORT_DELAY_IN_MS, QUEUE_LEN } from '../../constants';
 
 import { Queue } from './utils';
 import { setDelay } from '../../utils/utils';
@@ -19,11 +18,10 @@ import styles from './queue.module.css';
 export const QueuePage: FC = () => {
   const queue = useRef(new Queue(QUEUE_LEN));
 
-  const { values, handleChange, clearValue } = useForm({ value: '' });
-  const value =
-    typeof values['value'] !== 'string'
-      ? String(values['value'])
-      : values['value'];
+  const { values, handleChange, clearValue } = useForm({
+    chars: { value: '' },
+  });
+  const value = values['chars'].value;
 
   const [result, setResult] = useState<(string | null)[]>(
     new Array(QUEUE_LEN).fill(null)
@@ -40,12 +38,10 @@ export const QueuePage: FC = () => {
 
   const showIncreaseQueue = async () => {
     const currentValue = value;
-    clearValue('value');
+    clearValue('chars');
 
     setInstant(
-      queue.current.isEmpty
-        ? queue.current.tail
-        : queue.current.tail + 1
+      queue.current.isEmpty ? queue.current.tail : queue.current.tail + 1
     );
     await setDelay(SHORT_DELAY_IN_MS);
 
@@ -87,7 +83,7 @@ export const QueuePage: FC = () => {
   };
 
   const handleCleanClick = () => {
-    clearValue('value');
+    clearValue('chars');
     queue.current.clear();
     showDataFromQueue();
   };
@@ -101,12 +97,13 @@ export const QueuePage: FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
-            name={'value'}
+            name={'chars'}
             onChange={handleChange}
             disabled={loader}
           />
           <Button
             type={'button'}
+            name={'add'}
             text={'Добавить'}
             onClick={handleAddClick}
             isLoader={loader && action === Actions.AddToTail}
@@ -118,6 +115,7 @@ export const QueuePage: FC = () => {
           />
           <Button
             type={'button'}
+            name={'delete'}
             text={'Удалить'}
             onClick={handleRemoveClick}
             isLoader={loader && action === Actions.DeleteFromHead}
@@ -129,11 +127,11 @@ export const QueuePage: FC = () => {
         </fieldset>
         <Button
           type={'button'}
+          name={'clear'}
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={
-            loader ||
-            (queue.current.tail === 0 && queue.current.length === 0)
+            loader || (queue.current.tail === 0 && queue.current.length === 0)
           }
         />
       </form>
@@ -146,8 +144,7 @@ export const QueuePage: FC = () => {
 
             let isEmpty = queue.current.isEmpty;
             let nullablePosition =
-              queue.current.head === 0 &&
-              queue.current.tail === 0;
+              queue.current.head === 0 && queue.current.tail === 0;
 
             if (isEmpty && nullablePosition) {
               isHead = false;

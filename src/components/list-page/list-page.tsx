@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { DELAY_IN_MS } from '../../constants/delays';
 import {
+  DELAY_IN_MS,
   MIN_LIST_LEN,
   MAX_LIST_LEN,
   MIN_LIST_VALUE,
   MAX_LIST_VALUE,
-} from '../../constants/linked-list';
+} from '../../constants';
 
 import { LinkedList } from './utils';
 import { getRandomArr, setDelay } from '../../utils/utils';
@@ -36,19 +36,17 @@ export const ListPage: React.FC = () => {
   );
 
   const { values, handleChange, clearValue } = useForm({
-    value: '',
-    index: -1,
+    chars: {
+      value: ''
+    },
+    index: {
+      value: '',
+      onlyDigits: true
+    }
   });
 
-  const value =
-    typeof values['value'] !== 'string'
-      ? String(values['value'])
-      : values['value'];
-
-  const index =
-    typeof values['index'] === 'string'
-      ? Number.parseInt(values['index'])
-      : values['index'];
+  const chars = values['chars'].value;
+  const index = values['index'].value;
 
   const [result, setResult] = useState<string[]>([]);
 
@@ -76,11 +74,11 @@ export const ListPage: React.FC = () => {
     setLoader(true);
     setAction(Actions.AddToHead);
 
-    linkedList.current.prepend(value);
+    linkedList.current.prepend(chars);
 
     if (result.length > 0) {
-      setCurrentElement(value);
-      clearValue('value');
+      setCurrentElement(chars);
+      clearValue('chars');
 
       setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(0);
@@ -94,7 +92,7 @@ export const ListPage: React.FC = () => {
       setModifiedIndex(-1);
       setSmallCirclePosition(undefined);
     } else {
-      clearValue('value');
+      clearValue('chars');
       showCurrentResult();
       setModifiedIndex(0);
 
@@ -110,11 +108,11 @@ export const ListPage: React.FC = () => {
     setLoader(true);
     setAction(Actions.AddToTail);
 
-    linkedList.current.append(value);
+    linkedList.current.append(chars);
 
     if (result.length > 0) {
-      setCurrentElement(value);
-      clearValue('value');
+      setCurrentElement(chars);
+      clearValue('chars');
 
       setSmallCirclePosition(Positions.Top);
       setSmallCircleIndex(linkedList.current.listSize - 2);
@@ -128,7 +126,7 @@ export const ListPage: React.FC = () => {
       setModifiedIndex(-1);
       setSmallCirclePosition(undefined);
     } else {
-      clearValue('value');
+      clearValue('chars');
       showCurrentResult();
       setModifiedIndex(0);
 
@@ -186,21 +184,21 @@ export const ListPage: React.FC = () => {
 
     let currentIndex = 0;
 
-    while (currentIndex <= index) {
+    while (currentIndex <= Number.parseInt(index)) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;
     }
 
     setSmallCirclePosition(Positions.Top);
-    setSmallCircleIndex(index);
-    setCurrentElement(value);
+    setSmallCircleIndex(Number.parseInt(index));
+    setCurrentElement(chars);
     await setDelay(DELAY_IN_MS);
 
-    linkedList.current.addByIndex(value, index);
+    linkedList.current.addByIndex(chars, Number.parseInt(index));
 
     setSmallCircleIndex(-1);
-    setModifiedIndex(index);
+    setModifiedIndex(Number.parseInt(index));
     showCurrentResult();
 
     await setDelay(DELAY_IN_MS);
@@ -209,7 +207,7 @@ export const ListPage: React.FC = () => {
     setChangingIndex(-1);
     setSmallCirclePosition(undefined);
 
-    clearValue('value');
+    clearValue('chars');
     clearValue('index');
 
     setLoader(false);
@@ -222,20 +220,20 @@ export const ListPage: React.FC = () => {
 
     let currentIndex = 0;
 
-    while (currentIndex <= index) {
+    while (currentIndex <= Number.parseInt(index)) {
       setChangingIndex(currentIndex);
       await setDelay(DELAY_IN_MS);
       currentIndex++;
     }
 
     setSmallCirclePosition(Positions.Bottom);
-    setSmallCircleIndex(index);
+    setSmallCircleIndex(Number.parseInt(index));
 
-    setCurrentElement(result[index]);
+    setCurrentElement(result[Number.parseInt(index)]);
     setResult((prev) => [
-      ...prev.slice(0, index),
+      ...prev.slice(0, Number.parseInt(index)),
       '',
-      ...prev.slice(index + 1),
+      ...prev.slice(Number.parseInt(index) + 1),
     ]);
     await setDelay(DELAY_IN_MS);
 
@@ -243,7 +241,7 @@ export const ListPage: React.FC = () => {
     setChangingIndex(-1);
     setSmallCirclePosition(undefined);
 
-    linkedList.current.deleteByIndex(index);
+    linkedList.current.deleteByIndex(Number.parseInt(index));
     clearValue('index');
     showCurrentResult();
 
@@ -253,14 +251,17 @@ export const ListPage: React.FC = () => {
 
   const isCorrectAddByIndex = (): boolean | undefined => {
     return !(
-      value.length !== 0 &&
-      index > -1 &&
-      index < linkedList.current.listSize
+      chars.length !== 0 &&
+      Number.parseInt(index) > -1 &&
+      Number.parseInt(index) < linkedList.current.listSize
     );
   };
 
   const isCorrectDeleteByIndex = (): boolean | undefined => {
-    return !(index > -1 && index < linkedList.current.listSize);
+    return !(
+      Number.parseInt(index) > -1 &&
+      Number.parseInt(index) < linkedList.current.listSize
+    );
   };
 
   const composeHeadProperty = (index: number) => {
@@ -282,7 +283,7 @@ export const ListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    showCurrentResult();
+    showCurrentResult();  
   }, []);
 
   return (
@@ -291,36 +292,39 @@ export const ListPage: React.FC = () => {
         <fieldset className={styles.form__group}>
           <Input
             type={'text'}
-            placeholder={'Введите значение'}
+            name={'chars'}
+            value={chars}
             maxLength={4}
             isLimitText={true}
-            value={value}
-            name={'value'}
+            placeholder={'Введите значение'}
             onChange={handleChange}
             disabled={loader}
           />
           <Button
             type={'button'}
+            name={'addToHeadButton'}
             text={'Добавить в head'}
             style={{ minWidth: '175px' }}
             onClick={handleAddHeadClick}
             isLoader={loader && action === Actions.AddToHead}
             disabled={
-              (loader && action !== Actions.AddToHead) || value.length === 0
+              (loader && action !== Actions.AddToHead) || chars.length === 0
             }
           />
           <Button
             type={'button'}
+            name={'addToTailButton'}
             text={'Добавить в tail'}
             style={{ minWidth: '175px' }}
             onClick={handleAddTailClick}
             isLoader={loader && action === Actions.AddToTail}
             disabled={
-              (loader && action !== Actions.AddToTail) || value.length === 0
+              (loader && action !== Actions.AddToTail) || chars.length === 0
             }
           />
           <Button
             type={'button'}
+            name={'deleteFromHeadButton'}
             text={'Удалить из head'}
             style={{ minWidth: '175px' }}
             onClick={handleDeleteHeadClick}
@@ -332,6 +336,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'deleteFromTailButton'}
             text={'Удалить из tail'}
             style={{ minWidth: '175px' }}
             onClick={handleDeleteTailClick}
@@ -346,13 +351,14 @@ export const ListPage: React.FC = () => {
           <Input
             type={'text'}
             placeholder={'Введите индекс'}
-            value={index === -1 ? '' : index}
+            value={index}
             name={'index'}
             onChange={handleChange}
             disabled={loader}
           />
           <Button
             type={'button'}
+            name={'addByIndexButton'}
             text={'Добавить по индексу'}
             style={{ minWidth: '362px' }}
             onClick={handleAddByIndex}
@@ -363,6 +369,7 @@ export const ListPage: React.FC = () => {
           />
           <Button
             type={'button'}
+            name={'deleteByIndexButton'}
             text={'Удалить по индексу'}
             style={{ minWidth: '362px' }}
             onClick={handleDeleteByIndex}

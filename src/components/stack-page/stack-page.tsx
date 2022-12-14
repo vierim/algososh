@@ -1,7 +1,7 @@
 import { FC, useState, useRef } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { DELAY_IN_MS } from '../../constants/delays';
+import { DELAY_IN_MS } from '../../constants';
 
 import { Stack } from './utils';
 import { setDelay } from '../../utils/utils';
@@ -19,11 +19,10 @@ import { ScrollRow } from '../ui/scroll-row/scroll-row';
 export const StackPage: FC = () => {
   const stackRef = useRef(new Stack());
 
-  const { values, handleChange, clearValue } = useForm({ value: '' });
-  const value =
-    typeof values['value'] !== 'string'
-      ? String(values['value'])
-      : values['value'];
+  const { values, handleChange, clearValue } = useForm({
+    chars: { value: '' },
+  });
+  const value = values['chars'].value;
 
   const [result, setResult] = useState<string[]>([]);
   const [action, setAction] = useState<Actions>(Actions.Waiting);
@@ -41,7 +40,7 @@ export const StackPage: FC = () => {
 
     setInstant(stackRef.current.lastIndex);
     setAction(Actions.AddToTail);
-    clearValue('value');
+    clearValue('chars');
 
     showDataFromStack();
     await setDelay(DELAY_IN_MS);
@@ -67,7 +66,7 @@ export const StackPage: FC = () => {
   };
 
   const handleCleanClick = () => {
-    clearValue('value');
+    clearValue('chars');
     stackRef.current.clear();
     showDataFromStack();
   };
@@ -81,12 +80,13 @@ export const StackPage: FC = () => {
             maxLength={4}
             isLimitText={true}
             value={value}
-            name={'value'}
+            name={'chars'}
             onChange={handleChange}
             disabled={loader}
           />
           <Button
             type={'button'}
+            name={'add'}
             text={'Добавить'}
             onClick={handleAddClick}
             isLoader={loader && action === Actions.AddToTail}
@@ -96,6 +96,7 @@ export const StackPage: FC = () => {
           />
           <Button
             type={'button'}
+            name={'delete'}
             text={'Удалить'}
             onClick={handleRemoveClick}
             isLoader={loader && action === Actions.DeleteFromTail}
@@ -107,6 +108,7 @@ export const StackPage: FC = () => {
         </fieldset>
         <Button
           type={'button'}
+          name={'clear'}
           text={'Очистить'}
           onClick={handleCleanClick}
           disabled={loader || result.length === 0}

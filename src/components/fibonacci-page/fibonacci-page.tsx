@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
+import { SHORT_DELAY_IN_MS } from '../../constants';
 import { getFibonacciNumbers } from './utils';
 
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
@@ -15,11 +15,13 @@ export const FibonacciPage: FC = () => {
   const fibonacciNumbers = useRef<number[]>([]);
   const timerId = useRef<NodeJS.Timeout>();
 
-  const { values, handleChange } = useForm({ value: 0 });
-  const value =
-    typeof values['value'] !== 'number'
-      ? Number.parseInt(values['value'])
-      : values['value'];
+  const { values, handleChange } = useForm({
+    searchedNumber: {
+      value: '0',
+      onlyDigits: true
+    } 
+  });
+  const searchedNumber = values['searchedNumber'].value;
 
   const [loader, setLoader] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
@@ -42,7 +44,7 @@ export const FibonacciPage: FC = () => {
   const handleClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
-    fibonacciNumbers.current = getFibonacciNumbers(value);
+    fibonacciNumbers.current = getFibonacciNumbers(Number.parseInt(searchedNumber));
     setStep(0);
     setLoader(true);
 
@@ -64,8 +66,8 @@ export const FibonacciPage: FC = () => {
           type={'number'}
           max={19}
           isLimitText={true}
-          value={value}
-          name={'value'}
+          value={searchedNumber}
+          name={'searchedNumber'}
           onChange={handleChange}
           disabled={loader}
         />
@@ -73,7 +75,11 @@ export const FibonacciPage: FC = () => {
           type={'submit'}
           text={'Рассчитать'}
           onClick={handleClick}
-          disabled={value < 1 || value > 19}
+          disabled={
+            searchedNumber === '' ||
+            Number.parseInt(searchedNumber) < 1 ||
+            Number.parseInt(searchedNumber) > 19
+          }
           isLoader={loader}
         />
       </form>

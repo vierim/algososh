@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 
-import { DELAY_IN_MS } from '../../constants/delays';
+import { DELAY_IN_MS } from '../../constants';
 import { getElementState, ReverseRange } from './utils';
 
 import type { TReverseRangeResult } from '../../types';
@@ -17,11 +17,10 @@ export const StringComponent: FC = () => {
   const rangeRef = useRef(new ReverseRange<string>());
   const timerId = useRef<NodeJS.Timeout>();
 
-  const { values, handleChange, clearValue } = useForm({ range: '' });
-  const range =
-    typeof values['range'] !== 'string'
-      ? String(values['range'])
-      : values['range'];
+  const { values, handleChange, clearValue } = useForm({
+    range: { value: '' },
+  });
+  const range = values['range'].value;
 
   const [result, setResult] = useState<TReverseRangeResult>([]);
   const [loader, setLoader] = useState<boolean>(false);
